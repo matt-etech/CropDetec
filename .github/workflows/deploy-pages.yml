@@ -36,7 +36,11 @@ jobs:
         run: flutter pub get
 
       - name: Build web application
-        run: flutter build web --release --base-href "/CropDetec/"
+        run: >-
+          flutter build web --release
+          --base-href "/CropDetec/"
+          --dart-define=API_BASE_URL=https://92.4.150.53.sslip.io/api
+          --dart-define=STORAGE_BASE_URL=https://92.4.150.53.sslip.io/storage
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
