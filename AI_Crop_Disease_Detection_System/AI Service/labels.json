@@ -1,0 +1,52 @@
+{
+  "0": {
+    "crop": "Maize",
+    "disease": "Common Rust",
+    "class_label": "maize_common_rust"
+  },
+  "1": {
+    "crop": "Maize",
+    "disease": "Gray Leaf Spot",
+    "class_label": "maize_gray_leaf_spot"
+  },
+  "2": {
+    "crop": "Maize",
+    "disease": "Northern Leaf Blight",
+    "class_label": "maize_leaf_blight"
+  },
+  "3": {
+    "crop": "Pepper",
+    "disease": "Bacterial Spot",
+    "class_label": "pepper_bacterial_spot"
+  },
+  "4": {
+    "crop": "Potato",
+    "disease": "Early Blight",
+    "class_label": "potato_early_blight"
+  },
+  "5": {
+    "crop": "Potato",
+    "disease": "Late Blight",
+    "class_label": "potato_late_blight"
+  },
+  "6": {
+    "crop": "Soybean",
+    "disease": "Healthy",
+    "class_label": "soybean_healthy"
+  },
+  "7": {
+    "crop": "Squash",
+    "disease": "Powdery Mildew",
+    "class_label": "squash_powdery_mildew"
+  },
+  "8": {
+    "crop": "Tomato",
+    "disease": "Early Blight",
+    "class_label": "tomato_early_blight"
+  },
+  "9": {
+    "crop": "Tomato",
+    "disease": "Late Blight",
+    "class_label": "tomato_late_blight"
+  }
+}

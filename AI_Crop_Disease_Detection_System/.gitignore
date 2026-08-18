@@ -1,0 +1,8 @@
+AI Service/.cache/
+AI Service/.tools/
+AI Service/.venv/
+AI Service/.venv312/
+AI Service/data/raw/
+AI Service/data/processed/
+AI Service/models/*.keras
+AI Service/models/class_names.txt

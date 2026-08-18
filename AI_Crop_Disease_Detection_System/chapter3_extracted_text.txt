@@ -1,0 +1,795 @@
+﻿CHAPTER THREE
+METHODOLOGY
+3.1 Introduction
+This chapter presents the methodology adopted in the design, development, implementation and evaluation of the proposed AI-Powered Mobile Crop Disease Detection System. The methodology provides a systematic framework that guided the development of the application from problem identification to system deployment. It explains the research design, system requirements, system design, development tools, implementation procedures, testing methods and ethical considerations employed throughout the study.
+Artificial Intelligence has become an important technology in modern agriculture because of its ability to improve decision-making, increase productivity and reduce crop losses through early disease diagnosis. Recent advances in deep learning have significantly improved plant disease identification by enabling computer systems to automatically recognise complex disease patterns from digital images with high accuracy (Barbedo, 2022). Researchers have also demonstrated that convolutional neural networks outperform many traditional machine learning techniques in crop disease classification because they automatically learn hierarchical image features without requiring manual feature extraction (Haridasan, Thomas & Raj, 2022).
+The proposed system integrates mobile application development, web application development and artificial intelligence into a single platform that enables farmers to capture crop leaf images using a smartphone and receive immediate disease diagnosis together with recommended treatment and prevention measures. The mobile application will be developed using Flutter because it supports cross-platform development while providing high performance and a consistent user experience across Android devices. The backend services will be developed using Laravel 12, which provides secure authentication, efficient routing, RESTful API support and robust database management features suitable for enterprise software applications. The system will use MySQL as its relational database management system to store user accounts, disease information, diagnosis history and treatment recommendations. The artificial intelligence component will be implemented using Python, TensorFlow and OpenCV to train and deploy a Convolutional Neural Network capable of recognising crop diseases from leaf images.
+This research adopts the Design Science Research methodology because the primary objective is to develop and evaluate an innovative technological artefact capable of solving a practical agricultural problem. Design Science Research is widely recognised within information systems research for creating solutions that address real-world organisational challenges through systematic design and evaluation (Hevner et al., 2004). To complement this approach, the Agile Software Development Methodology was adopted because it promotes iterative development, continuous testing, stakeholder feedback and incremental software improvement throughout the development lifecycle (Sommerville, 2021).
+The development process consists of several phases, including requirements analysis, system design, dataset collection, image pre-processing, artificial intelligence model development, backend development, mobile application development, system integration, testing and deployment. Each phase contributes towards producing a secure, reliable and user-friendly mobile application capable of assisting farmers in the early detection and management of crop diseases. Furthermore, the methodology ensures that the developed system satisfies both the functional and non-functional requirements identified during the problem analysis stage while providing a practical solution for improving agricultural productivity.
+This chapter therefore provides a comprehensive description of the methodologies, technologies and procedures adopted during the development of the proposed AI-Powered Mobile Crop Disease Detection System.
+3.2 Research Design
+Research design provides a systematic framework that guides the processes involved in achieving the objectives of a research study. It defines the procedures for collecting data, designing the proposed solution, implementing the system and evaluating its performance. An appropriate research design ensures that the research is conducted in a structured manner while producing reliable and valid findings (Creswell & Creswell, 2023).
+This study adopted the Design Science Research (DSR) methodology integrated with the Agile Software Development Methodology. Design Science Research was selected because the primary objective of this study is to design, develop and evaluate an innovative software artefact capable of addressing the problem of delayed crop disease diagnosis among farmers. According to Hevner et al. (2004), Design Science Research is suitable for information systems research because it focuses on creating practical technological solutions that solve real-world problems through systematic design, implementation and evaluation. The methodology therefore provides an appropriate framework for developing an intelligent crop disease detection system that combines mobile computing and artificial intelligence technologies.
+The Agile Software Development Methodology complements Design Science Research by supporting iterative software development, continuous testing and regular stakeholder feedback throughout the software development lifecycle. Sommerville (2021) states that Agile development encourages incremental software delivery, allowing developers to respond efficiently to changing user requirements while improving software quality after every iteration. This methodology was considered appropriate for the current study because the proposed system consists of several independent components, including the Flutter mobile application, Laravel backend, MySQL database and Python-based artificial intelligence model, all of which require continuous integration and testing throughout development.
+The proposed research design also incorporates an experimental approach during the development of the artificial intelligence model. The experiment involves training, validating and testing a Convolutional Neural Network using labelled crop leaf images to determine its capability to classify healthy and diseased plants accurately. Experimental evaluation is widely adopted in deep learning research because it enables researchers to compare model performance using objective evaluation metrics such as accuracy, precision, recall and F1-score (Haridasan, Thomas & Raj, 2022). Furthermore, recent studies have shown that deep learning techniques have become the preferred approach for automated crop disease recognition because they eliminate the need for manual feature extraction while achieving higher classification accuracy than conventional machine learning algorithms (George et al., 2025; Khan et al., 2025).
+The development of the proposed AI-Powered Mobile Crop Disease Detection System was organised into several sequential but iterative phases. These phases include requirements analysis, system design, dataset collection, image pre-processing, artificial intelligence model development, backend development, mobile application development, system integration, testing and deployment. Although these phases are presented sequentially for ease of explanation, Agile development allowed the research to revisit earlier phases whenever improvements were identified during testing. This iterative approach reduced development risks and improved the overall quality of the final system.
+3.2.1 Requirements Analysis
+Requirements analysis is one of the most critical stages of software development because it establishes the foundation upon which the entire system is designed and implemented. During this phase, the functional and non-functional requirements of the proposed system were identified, analysed and documented to ensure that the final application satisfies the needs of its intended users. According to Sommerville (2021), requirements engineering enables developers to understand stakeholder expectations, minimise software development risks and produce systems that effectively solve the identified problem.
+The requirements for the AI-Powered Mobile Crop Disease Detection System were gathered through an extensive review of scholarly literature on crop disease detection, artificial intelligence in agriculture and mobile health technologies. Previous studies on plant disease recognition were analysed to identify the limitations of existing systems and determine features that could improve disease diagnosis and user experience. The literature revealed that most existing crop disease detection systems rely heavily on image classification using deep learning models, particularly Convolutional Neural Networks (CNNs), because of their superior capability to extract complex image features automatically (Barbedo, 2022). Similarly, Haridasan, Thomas and Raj (2022) observed that CNN-based approaches consistently outperform traditional machine learning algorithms in crop disease classification due to their ability to learn discriminative visual features directly from training images.
+In addition to the literature review, the system requirements were derived from the objectives established in Chapter One and the practical challenges faced by farmers in diagnosing crop diseases. Many small-scale farmers experience delays in obtaining professional agricultural advice because agricultural extension officers are not always readily available. Consequently, diseases are often identified at advanced stages when crop damage has already occurred. Researchers have highlighted that delayed disease identification contributes significantly to reduced crop yields and food insecurity, particularly in developing countries where access to agricultural expertise is limited (Khan et al., 2025). These findings reinforced the need for an intelligent mobile application capable of providing immediate disease diagnosis using smartphone technology.
+Based on the identified problem, the proposed system was designed to enable farmers to capture crop leaf images using a mobile device, submit the images for analysis, receive real-time disease predictions and obtain treatment and prevention recommendations. The system was also designed to maintain a diagnosis history, allowing users to review previous diagnoses and monitor disease occurrence over time. Furthermore, recognising that many farmers in Zimbabwe prefer communicating in local languages, the application incorporates a Shona voice assistant to improve accessibility and usability for users with limited digital literacy.
+The requirements gathered during this phase were categorised into functional requirements and non-functional requirements. Functional requirements describe the specific services that the application must provide, whereas non-functional requirements specify the quality attributes that determine how effectively those services are delivered (Sommerville, 2021). These requirements guided the subsequent stages of system design, implementation and testing.
+The requirements analysis phase therefore ensured that the proposed AI-Powered Mobile Crop Disease Detection System was developed based on actual user needs rather than technological assumptions. By establishing clear system requirements before implementation, the research reduced the likelihood of design errors and ensured that the final application addresses the practical challenges associated with crop disease diagnosis.
+3.2.1.1 Functional Requirements
+Functional requirements define the specific operations that the proposed system must perform in order to satisfy user requirements. They describe the interactions between users and the application as well as the services provided by the software (Sommerville, 2021).
+The proposed system shall be capable of:
+Registering new users and authenticating existing users.
+Capturing crop leaf images using the smartphone camera.
+Uploading crop images for disease analysis.
+Processing uploaded images using the trained CNN model.
+Displaying the predicted disease together with the confidence score.
+Providing treatment recommendations for the identified disease.
+Providing disease prevention guidelines.
+Maintaining diagnosis history for each registered farmer.
+Supporting voice interaction in both English and Shona.
+Allowing administrators to manage diseases, treatments and user accounts through the Laravel administration panel.
+3.2.1.2 Non-Functional Requirements
+Non-functional requirements describe the quality attributes that determine how effectively a software system performs its intended functions. Unlike functional requirements, which specify what the system should do, non-functional requirements define how well the system should perform under different operating conditions. These requirements are essential because they influence the reliability, usability, maintainability, security and overall performance of the developed system (Sommerville, 2021).
+The AI-Powered Mobile Crop Disease Detection System was designed to satisfy several non-functional requirements to ensure that it remains efficient, secure and user-friendly when deployed in real-world agricultural environments.
+Performance
+The system should process uploaded crop images and return disease diagnosis results within a reasonable period to minimise waiting time for farmers. Since timely disease identification is essential for reducing crop losses, the Artificial Intelligence model should produce predictions within a few seconds after image submission. TensorFlow-based deep learning models have demonstrated the ability to perform real-time image classification when deployed using optimised inference techniques (TensorFlow Developers, 2024).
+Reliability
+Reliability refers to the ability of the system to perform consistently without failure under normal operating conditions. The proposed application should consistently produce accurate disease predictions and remain available whenever users require its services. To improve reliability, the Laravel backend will implement robust error handling, exception management and input validation mechanisms, while the Artificial Intelligence model will be evaluated extensively before deployment to minimise incorrect predictions (Sommerville, 2021).
+Security
+Security is an important consideration because the application stores personal user information together with diagnosis records. The system therefore incorporates authentication and authorisation mechanisms to prevent unauthorised access to protected resources. Laravel provides built-in security features such as password hashing, authentication middleware, Cross-Site Request Forgery (CSRF) protection and SQL injection prevention, making it suitable for developing secure web services (Laravel Holdings, 2025). Furthermore, secure communication between the Flutter mobile application and the Laravel backend will be achieved through RESTful APIs protected using authentication tokens.
+Usability
+The proposed application is intended for use by farmers with varying levels of technological experience. Consequently, the user interface should remain simple, intuitive and easy to navigate. Large buttons, clear icons, readable typography and straightforward navigation structures will be implemented to improve usability. Research has shown that user-centred interface design significantly improves technology adoption among agricultural users, particularly older farmers who may possess limited digital literacy (Food and Agriculture Organization, 2022).
+To further improve accessibility, the application incorporates a bilingual voice assistant supporting both English and Shona. The voice assistant enables users to receive disease diagnosis results and treatment recommendations through speech, reducing dependence on reading text displayed on the screen. This functionality is expected to improve accessibility for users with reading difficulties or limited formal education.
+Scalability
+The proposed system should accommodate future expansion without requiring significant architectural changes. Laravel supports modular software development, making it possible to introduce additional crop varieties, diseases and treatment recommendations as new agricultural information becomes available. Similarly, Flutter allows additional mobile features to be incorporated while maintaining a single codebase across supported platforms (Google, 2024).
+Maintainability
+Maintainability refers to the ease with which software can be modified, corrected or enhanced after deployment. The system adopts a modular architecture that separates the mobile application, backend services, database and Artificial Intelligence model into independent components. Such separation improves code readability, facilitates debugging and simplifies future software maintenance. According to Sommerville (2021), modular software architectures significantly reduce software maintenance costs because changes can be implemented without affecting unrelated components.
+Availability
+The application should remain available whenever users require crop disease diagnosis services. The backend server and database should therefore maintain high uptime to ensure uninterrupted service delivery. Database backup procedures and exception handling mechanisms will also be implemented to minimise service interruptions caused by hardware or software failures.
+The non-functional requirements identified during this phase established the quality standards that guided the design and implementation of the proposed AI-Powered Mobile Crop Disease Detection System. These requirements ensured that the final application not only fulfilled its intended functions but also achieved acceptable levels of performance, security, usability and reliability.
+Table 3.1: Summary of Non-Functional Requirements
+Requirement
+Description
+Performance
+The system shall generate disease predictions within an acceptable response time.
+Reliability
+The application shall provide consistent and dependable disease diagnosis.
+Security
+User information shall be protected using authentication, encryption and secure API communication.
+Usability
+The application shall provide a simple, intuitive interface suitable for farmers of different technological backgrounds.
+Scalability
+The system shall support future expansion through modular software architecture.
+Maintainability
+The application shall be easy to update, debug and extend.
+Availability
+The system shall remain accessible whenever users require disease diagnosis services.
+3.2.2 Data Collection and Dataset Preparation
+The performance of any deep learning model depends significantly on the quality, diversity and quantity of the dataset used during training. Data collection and dataset preparation therefore constitute critical stages in the development of Artificial Intelligence systems because they directly influence the model's ability to learn meaningful patterns and produce accurate predictions. According to Barbedo (2022), the availability of high-quality and well-balanced datasets remains one of the most important factors affecting the performance of deep learning models in plant disease classification.
+The dataset used in this study consists of labelled images of healthy and diseased crop leaves obtained from publicly available agricultural image repositories. The primary dataset was sourced from the PlantVillage dataset, which is one of the most widely used benchmark datasets for crop disease detection research. The PlantVillage dataset contains thousands of expertly labelled images covering multiple crop species and disease categories, making it suitable for training deep learning models for image classification (Hughes & Salathé, 2015). To improve the applicability of the proposed system to local agricultural conditions, additional crop disease images from reputable agricultural research publications and publicly available datasets were reviewed where appropriate.
+The collected dataset included images representing both healthy and diseased leaves from commonly cultivated crops. Each image was assigned a corresponding class label indicating the crop species and disease category. Proper labelling was essential because supervised deep learning algorithms require correctly labelled training data to learn the relationship between image features and disease classes. Incorrectly labelled images can significantly reduce model accuracy and introduce bias during the training process (Haridasan, Thomas & Raj, 2022).
+Before training the Convolutional Neural Network, the collected images underwent several pre-processing procedures to improve dataset quality and ensure compatibility with the selected deep learning architecture. Image pre-processing reduces noise, standardises image characteristics and improves the model's ability to identify discriminative features. Recent studies have demonstrated that appropriate image pre-processing significantly improves classification performance by reducing unnecessary variations within training datasets (Khan et al., 2025).
+The first stage of dataset preparation involved removing duplicate, blurred and corrupted images that could negatively influence model learning. Images with poor lighting conditions, excessive background objects or incomplete leaf structures were also excluded to improve overall dataset quality. This ensured that the Artificial Intelligence model learned meaningful disease characteristics rather than irrelevant image artefacts.
+Following dataset cleaning, all images were resized to a fixed resolution suitable for the Convolutional Neural Network architecture. Standardising image dimensions ensures that every image entering the neural network contains identical input dimensions, thereby reducing computational complexity and improving processing efficiency. TensorFlow documentation recommends maintaining consistent image dimensions throughout model training to optimise computational performance and improve convergence during learning (TensorFlow Developers, 2024).
+Image normalisation was subsequently performed to scale pixel intensity values to a standard numerical range before training. Normalisation improves numerical stability during gradient optimisation and accelerates convergence of deep learning algorithms by reducing variation in pixel distributions across training samples (Goodfellow, Bengio & Courville, 2016).
+To improve the model's ability to generalise to previously unseen images, data augmentation techniques were applied to artificially increase dataset diversity. Data augmentation generated additional training samples through random image transformations such as horizontal flipping, slight rotations, zooming, brightness adjustment and translation. These transformations simulate natural variations that occur when farmers capture crop images using mobile devices under different environmental conditions. According to Shorten and Khoshgoftaar (2019), data augmentation reduces overfitting by exposing deep learning models to a broader range of image variations during training.
+After pre-processing, the dataset was divided into three independent subsets: the training dataset, validation dataset and testing dataset. The training dataset was used to train the Convolutional Neural Network, the validation dataset was used to optimise model hyperparameters during training, while the testing dataset was reserved for evaluating the final performance of the trained model. A dataset split of 70% for training, 15% for validation and 15% for testing was adopted because it provides sufficient data for model learning while maintaining independent datasets for unbiased performance evaluation. Similar dataset partitioning strategies have been widely adopted in recent crop disease detection studies (Haridasan, Thomas & Raj, 2022).
+The data collection and preparation process ensured that the Artificial Intelligence model was trained using high-quality, representative and well-prepared image data. This stage laid the foundation for developing a reliable deep learning model capable of accurately identifying crop diseases under practical agricultural conditions.
+Figure 3.2: Data Collection and Dataset Preparation Process
+(A flow diagram illustrating dataset collection, cleaning, pre-processing, augmentation and dataset splitting will be inserted here in the final dissertation.)
+3.2.3 Image Pre-processing
+Image pre-processing is an essential stage in the development of computer vision systems because it improves the quality of input images before they are presented to the deep learning model. The primary objective of image pre-processing is to reduce unwanted variations in image data, enhance important visual features and improve the overall accuracy of the classification model. According to Goodfellow, Bengio and Courville (2016), well-prepared input data enables neural networks to learn more representative features, resulting in improved prediction accuracy and faster model convergence during training.
+Crop leaf images captured using mobile devices are often affected by variations in illumination, background complexity, image resolution and camera orientation. Such variations may reduce the performance of deep learning models if they are not addressed during data preparation. Consequently, several image pre-processing techniques were applied before training the Convolutional Neural Network to ensure that the dataset was consistent and suitable for machine learning. Similar approaches have been adopted by recent studies on plant disease detection using deep learning (Barbedo, 2022).
+The first pre-processing operation involved resizing all images to a fixed resolution compatible with the selected Convolutional Neural Network architecture. Deep learning models require input images with uniform dimensions to ensure consistent feature extraction and efficient computation during training. In this study, each image was resized to 224 × 224 pixels, which is the standard input size used by many modern convolutional neural network architectures, including MobileNetV2, EfficientNet and ResNet (TensorFlow Developers, 2024).
+Following image resizing, image normalisation was performed to standardise pixel intensity values before model training. Pixel values originally ranging from 0 to 255 were scaled to values between 0 and 1. Normalisation reduces numerical instability during gradient optimisation and accelerates the learning process by ensuring that all input features have comparable numerical ranges (Goodfellow, Bengio & Courville, 2016).
+Data augmentation techniques were then applied to increase the diversity of the training dataset and minimise overfitting. Data augmentation artificially generates additional training images through controlled image transformations while preserving the original disease characteristics. These transformations simulate real-world conditions under which farmers may capture crop images using mobile devices. According to Shorten and Khoshgoftaar (2019), data augmentation improves the ability of deep learning models to generalise to previously unseen images and significantly enhances classification performance.
+The augmentation techniques applied during this study included horizontal flipping, random rotation, zooming, brightness adjustment and slight image translation. Horizontal flipping enables the model to recognise disease symptoms regardless of leaf orientation, while random rotation improves robustness to different camera angles. Brightness adjustment compensates for varying lighting conditions encountered in outdoor farming environments, whereas zooming and translation improve the model's ability to identify disease symptoms at different image scales and positions.
+OpenCV was utilised to perform several image manipulation operations during the pre-processing stage. OpenCV provides an extensive collection of image processing functions that facilitate image resizing, colour space conversion and noise reduction while maintaining computational efficiency (OpenCV Team, 2024). TensorFlow was subsequently used to generate augmented image batches during model training, allowing new image variations to be created dynamically without permanently increasing dataset size.
+Following augmentation, the dataset was partitioned into three independent subsets comprising the training dataset, validation dataset and testing dataset. Approximately 70% of the images were allocated for model training, 15% for validation and 15% for final model testing. The training dataset enabled the Convolutional Neural Network to learn disease features, the validation dataset was used to optimise hyperparameters and monitor model performance during training, while the testing dataset provided an unbiased evaluation of the final trained model. This dataset partitioning strategy has been widely adopted in recent deep learning studies because it balances learning efficiency with reliable performance evaluation (Haridasan, Thomas & Raj, 2022).
+The image pre-processing stage significantly improved the quality and consistency of the dataset used during model development. By reducing image variability and increasing dataset diversity through augmentation, the proposed system was better equipped to learn robust disease characteristics capable of supporting accurate crop disease diagnosis under practical farming conditions.
+Figure 3.3: Image Pre-processing Workflow
+(A professional flowchart illustrating image acquisition, image resizing, normalisation, augmentation, dataset splitting and storage will be inserted here in the final dissertation.)
+3.2.4 Selection of the Deep Learning Model
+The selection of an appropriate deep learning model is one of the most important decisions in the development of an Artificial Intelligence-based image classification system. Different Convolutional Neural Network (CNN) architectures possess varying levels of computational complexity, prediction accuracy and memory requirements. Consequently, selecting a suitable model requires balancing classification performance with computational efficiency, particularly when the final application is intended to operate on mobile devices with limited processing power.
+Several state-of-the-art CNN architectures have been successfully applied in crop disease detection, including AlexNet, VGG16, ResNet50, EfficientNet and MobileNetV2. These architectures have consistently demonstrated excellent performance in image classification tasks due to their ability to automatically learn hierarchical visual features directly from raw images (Barbedo, 2022). However, although deeper architectures generally achieve high prediction accuracy, they often require substantial computational resources, making them less suitable for mobile applications where memory consumption and inference speed are critical considerations (Tan & Le, 2019).
+MobileNetV2 was selected as the primary deep learning architecture for this study because it was specifically designed for mobile and embedded applications. Unlike conventional CNN architectures that perform standard convolution operations throughout the network, MobileNetV2 employs depthwise separable convolutions and inverted residual blocks, significantly reducing the number of model parameters and computational operations without substantially compromising classification accuracy (Sandler et al., 2018). This lightweight architecture enables faster inference while consuming less memory, making it particularly suitable for deployment within smartphone-based agricultural applications.
+Another important consideration influencing the selection of MobileNetV2 was its compatibility with transfer learning. Transfer learning allows models that have already been trained on large image datasets, such as ImageNet, to be adapted to new classification tasks using comparatively smaller datasets. This approach reduces training time, improves model generalisation and minimises the amount of labelled data required to achieve satisfactory performance. Recent studies have demonstrated that transfer learning significantly improves plant disease classification accuracy while reducing computational costs associated with training deep neural networks from scratch (Barbedo, 2022; Haridasan, Thomas & Raj, 2022).
+In addition to computational efficiency, MobileNetV2 offers high scalability and ease of deployment within TensorFlow Lite, making it appropriate for future deployment directly on mobile devices should offline disease diagnosis be required. Although the initial implementation of the proposed system performs disease classification through communication between the Flutter mobile application, Laravel backend and Python-based Artificial Intelligence service, selecting a lightweight architecture provides flexibility for future system enhancements without requiring substantial architectural modifications.
+To ensure that the selected model satisfied the objectives of the study, its performance was evaluated using several machine learning evaluation metrics, including classification accuracy, precision, recall, F1-score and confusion matrix analysis. These performance indicators provide objective measures of the model's capability to distinguish healthy crops from diseased crops while identifying individual disease categories correctly. According to Powers (2020), using multiple evaluation metrics provides a more comprehensive assessment of classifier performance than relying solely on classification accuracy, particularly when datasets contain class imbalances.
+The selection of MobileNetV2 therefore provides an appropriate balance between computational efficiency, prediction accuracy and deployment feasibility, making it suitable for the development of a mobile-based crop disease detection system intended for practical agricultural environments.
+Table 3.2: Comparison of Selected Deep Learning Models
+Model
+Advantages
+Limitations
+Suitability for this Study
+AlexNet
+Simple architecture and relatively fast training
+Lower classification accuracy than modern CNNs
+Moderate
+VGG16
+High feature extraction capability
+Large model size and high computational cost
+Low
+ResNet50
+Excellent classification accuracy using residual learning
+Computationally intensive for mobile deployment
+Moderate
+EfficientNet
+High accuracy with balanced scaling
+Greater implementation complexity
+High
+MobileNetV2
+Lightweight, fast inference, low memory usage and suitable for mobile applications
+Slightly lower accuracy than deeper architectures in some cases
+Very High
+The comparison presented in Table 3.2 demonstrates that MobileNetV2 provides the most appropriate balance between computational efficiency and predictive performance for the proposed AI-Powered Mobile Crop Disease Detection System. Its lightweight architecture makes it particularly suitable for integration with Flutter-based mobile applications while maintaining satisfactory disease classification accuracy.
+Figure 3.4: Architecture of the MobileNetV2 Deep Learning Model
+(A professionally designed diagram illustrating the MobileNetV2 architecture will be inserted here in the final dissertation.)
+3.2.5 Artificial Intelligence Model Development
+The Artificial Intelligence component of the proposed system is responsible for analysing crop leaf images and predicting the presence of diseases based on visual symptoms. This component forms the core of the AI-Powered Mobile Crop Disease Detection System because it enables automatic disease identification without requiring direct intervention from agricultural specialists. The model will be developed using Python because of its extensive support for machine learning and computer vision libraries, including TensorFlow, Keras and OpenCV, which have become standard tools for deep learning research and application development (TensorFlow Developers, 2024).
+The development of the deep learning model will follow a supervised learning approach. Supervised learning involves training a model using labelled data, where each training image is associated with its corresponding disease category. During training, the Convolutional Neural Network will learn to recognise distinctive visual characteristics associated with healthy and diseased crop leaves by adjusting its internal parameters to minimise prediction errors. According to Goodfellow, Bengio and Courville (2016), supervised learning enables deep neural networks to identify complex feature representations that improve classification performance when sufficient training data are available.
+Transfer learning will be employed during model development to improve classification performance while reducing computational requirements. Instead of training a deep neural network from scratch, the selected MobileNetV2 architecture will utilise weights pre-trained on the ImageNet dataset. These pre-trained weights contain general image features learned from millions of images, enabling the model to adapt more efficiently to crop disease classification using comparatively fewer agricultural training samples. Previous studies have demonstrated that transfer learning improves classification accuracy while reducing training time in agricultural image recognition applications (Barbedo, 2022; Haridasan, Thomas & Raj, 2022).
+Before training, the final classification layer of the MobileNetV2 model will be modified to correspond with the number of disease classes included in the prepared dataset. Earlier layers responsible for extracting general image features may initially remain frozen while the newly added classification layers are trained. After satisfactory initial performance has been achieved, selected convolutional layers may be fine-tuned to improve the model's ability to recognise disease-specific visual characteristics. This staged training strategy reduces the likelihood of overfitting while allowing the model to adapt to the characteristics of crop disease images (TensorFlow Developers, 2024).
+The model will be trained using mini-batch gradient descent with the Adam optimisation algorithm. The Adam optimiser is widely adopted in deep learning because it combines the advantages of adaptive learning rate optimisation with efficient convergence during model training (Kingma & Ba, 2015). Categorical Cross-Entropy will be used as the loss function because the proposed system performs multi-class image classification, where each input image belongs to one disease category. Throughout the training process, the model's performance will be monitored using the validation dataset to detect overfitting and determine the optimal number of training epochs.
+To further improve the robustness of the model, regularisation techniques such as dropout and early stopping will be incorporated during training. Dropout reduces overfitting by randomly deactivating selected neurons during each training iteration, thereby encouraging the network to learn more generalised feature representations. Early stopping monitors validation performance and automatically terminates training when additional epochs no longer improve model performance. These techniques have been shown to improve the generalisation capability of deep learning models across various image classification tasks (Goodfellow, Bengio & Courville, 2016).
+Following training, the completed model will be exported in TensorFlow format and integrated into a Python-based inference service responsible for processing prediction requests received from the Laravel backend. When a farmer uploads a crop leaf image through the Flutter mobile application, the Laravel backend will securely transmit the image to the Artificial Intelligence service. The trained model will analyse the image, identify the most probable disease category and return the prediction together with a confidence score. Laravel will then retrieve the appropriate treatment and prevention recommendations from the MySQL database before transmitting the complete diagnosis back to the Flutter application through the RESTful API.
+The development approach adopted for the Artificial Intelligence component ensures that the model remains modular and independent from the backend application. This modular architecture improves maintainability because future improvements to the deep learning model can be deployed without requiring significant modifications to the Flutter application or Laravel backend. Furthermore, separating the Artificial Intelligence service from the main application allows the system to accommodate newer deep learning architectures as advances in agricultural image recognition continue to emerge.
+Figure 3.5: Artificial Intelligence Model Development Process
+(A professional diagram illustrating dataset input, image pre-processing, MobileNetV2 training, validation, model optimisation, model export and deployment within the Python inference service will be inserted here in the final dissertation.)
+3.2.6 System Architecture and Integration Strategy
+The proposed AI-Powered Mobile Crop Disease Detection System adopts a distributed three-tier architecture comprising the presentation layer, application layer and data layer. This architectural approach separates the user interface, business logic and data management into independent components, thereby improving system scalability, maintainability and security. According to Sommerville (2021), layered software architectures promote modular system development by reducing dependencies between software components and simplifying future maintenance.
+The presentation layer consists of the Flutter mobile application, which serves as the primary interface through which farmers interact with the system. Flutter was selected because it enables the development of high-performance cross-platform mobile applications using a single codebase while maintaining a consistent user experience across supported devices (Google, 2024). Through the mobile application, users will register accounts, authenticate themselves, capture crop leaf images using the smartphone camera, submit images for analysis and receive disease diagnosis results together with treatment and prevention recommendations.
+The application layer consists of two independent but interconnected services: the Laravel backend and the Python-based Artificial Intelligence service. Laravel serves as the central application server responsible for authenticating users, validating requests, managing business logic, communicating with the MySQL database and exposing secure RESTful APIs that facilitate communication between the mobile application and the Artificial Intelligence component. Laravel was selected because of its robust Model-View-Controller (MVC) architecture, built-in authentication mechanisms, middleware support and efficient database management capabilities, which simplify the development of secure and maintainable web applications (Laravel Holdings, 2025).
+The Artificial Intelligence service operates independently of the Laravel backend and is implemented using Python, TensorFlow and OpenCV. This service is responsible for receiving crop leaf images from Laravel, performing image pre-processing, executing disease classification using the trained MobileNetV2 model and returning prediction results to the backend application. Separating the Artificial Intelligence component from the main backend improves modularity because updates to the machine learning model can be deployed without affecting other system components. Such modular software architectures improve maintainability and facilitate future system enhancements (Sommerville, 2021).
+The data layer is implemented using MySQL, which stores all persistent application data, including user accounts, crop information, disease descriptions, treatment recommendations and diagnosis history. MySQL was selected because it provides reliable relational data management, supports structured query processing and integrates efficiently with Laravel through the Eloquent Object Relational Mapping (ORM) framework (Oracle Corporation, 2024). The database also maintains relationships between application entities, thereby ensuring data integrity and reducing redundancy.
+Communication between the various system components is achieved through RESTful Application Programming Interfaces (APIs). When a farmer captures and uploads a crop image using the Flutter mobile application, the image is transmitted securely to the Laravel backend through an HTTP request. Laravel authenticates the request, validates the uploaded image and forwards it to the Python Artificial Intelligence service for analysis. After completing disease classification, the Artificial Intelligence service returns the predicted disease category together with a confidence score to Laravel. The backend subsequently retrieves the corresponding treatment and prevention information from the MySQL database before returning a structured JSON response to the Flutter application. The mobile application then displays the diagnosis results to the user in both textual and voice formats.
+The integration strategy adopted in this study enables each system component to perform specialised functions while remaining loosely coupled with other components. This approach improves software maintainability, simplifies debugging and allows future enhancements to be implemented independently. For example, improvements to the Artificial Intelligence model can be deployed without modifying the mobile application, while additional mobile features can be introduced without requiring changes to the machine learning service. Such flexibility is one of the major advantages of service-oriented software architectures used in modern intelligent applications (Richardson & Smith, 2022).
+Figure 3.6 illustrates the overall architecture and communication flow of the proposed AI-Powered Mobile Crop Disease Detection System.
+Figure 3.6: Overall System Architecture
+(A professionally designed system architecture diagram will be inserted here showing the interaction between the Flutter Mobile Application, Laravel Backend, Python AI Service and MySQL Database.)
+The architecture adopted for this study provides a scalable and maintainable framework capable of supporting future enhancements such as additional crop varieties, multilingual support, offline inference and cloud-based deployment. Consequently, the proposed system architecture provides a robust foundation for the implementation of an intelligent mobile crop disease detection application capable of addressing the practical needs of farmers.
+3.2.7 System Workflow
+The system workflow describes the sequence of processes performed by the AI-Powered Mobile Crop Disease Detection System from the moment a user interacts with the mobile application until a disease diagnosis is returned. Defining the workflow provides a clear understanding of how the various system components interact to deliver the required functionality. According to Sommerville (2021), modelling system workflows before implementation improves software design by identifying the interactions between users, software components and external services.
+The workflow begins when a registered user launches the Flutter mobile application and authenticates using valid login credentials. Authentication is handled by the Laravel backend, which verifies the user's credentials against records stored in the MySQL database. Successful authentication grants the user access to the application's dashboard, while unsuccessful authentication results in an appropriate error message prompting the user to provide valid credentials. Secure authentication is essential for protecting sensitive user information and preventing unauthorised access to the application (Laravel Holdings, 2025).
+After successful authentication, the farmer navigates to the disease detection module and captures a photograph of a crop leaf using the smartphone camera or selects an existing image from the device gallery. Before transmission, the mobile application validates the selected image to ensure that it is in a supported image format and satisfies the required size limitations. Performing basic validation on the client side reduces unnecessary communication with the server and improves the overall responsiveness of the application (Google, 2024).
+The validated image is then transmitted to the Laravel backend through a secure RESTful API request. Upon receiving the image, Laravel performs additional validation checks to verify file integrity and confirm that the uploaded file satisfies the predefined validation rules. Once validation has been completed successfully, the backend temporarily stores the uploaded image and forwards it to the Python-based Artificial Intelligence service for analysis.
+The Artificial Intelligence service receives the uploaded image and performs the image pre-processing operations described in the previous section. These operations include image resizing, normalisation and any additional transformations required by the trained MobileNetV2 model. The pre-processed image is subsequently passed through the trained Convolutional Neural Network, which analyses the visual characteristics of the leaf and predicts the most probable disease category together with a confidence score indicating the certainty of the prediction. Recent studies have shown that combining convolutional neural networks with appropriate image pre-processing techniques significantly improves disease classification performance in agricultural applications (Barbedo, 2022; Haridasan, Thomas & Raj, 2022).
+After completing the prediction process, the Artificial Intelligence service returns the disease name and confidence score to the Laravel backend. Laravel then queries the MySQL database to retrieve additional information associated with the predicted disease, including a description of the disease, possible causes, recommended treatment methods and preventive measures. The diagnosis record is subsequently stored within the user's diagnosis history, allowing previous predictions to be retrieved for future reference.
+Once all required information has been assembled, Laravel constructs a structured JSON response and transmits it back to the Flutter mobile application. The application displays the disease diagnosis, confidence score, treatment recommendations and preventive measures using an intuitive graphical interface. Where required, the integrated voice assistant converts the diagnosis and recommendations into spoken output in either English or Shona, thereby improving accessibility for users who may experience difficulties reading on-screen information.
+If the Artificial Intelligence model is unable to classify the uploaded image with sufficient confidence or if the uploaded image does not meet the required quality standards, the application notifies the user and requests another image. This process reduces the likelihood of incorrect diagnoses while encouraging users to capture clearer images under suitable lighting conditions.
+The workflow adopted in this study ensures efficient communication between the Flutter mobile application, Laravel backend, Python Artificial Intelligence service and MySQL database. By clearly defining the responsibilities of each software component, the proposed architecture improves maintainability, scalability and overall system reliability while providing farmers with a seamless disease diagnosis experience.
+Figure 3.7: System Workflow of the AI-Powered Mobile Crop Disease Detection System
+(A workflow diagram illustrating user authentication, image capture, image validation, Laravel processing, AI prediction, database retrieval and result presentation will be inserted here in the final dissertation.)
+3.3 System Requirements
+System requirements define the hardware and software resources necessary for the successful development, deployment and operation of the proposed system. Identifying these requirements before implementation ensures that the application is developed within an appropriate computing environment and functions efficiently under expected operating conditions. According to Sommerville (2021), system requirements provide the technical foundation upon which software applications are developed and deployed while ensuring compatibility between software components and supporting infrastructure.
+The AI-Powered Mobile Crop Disease Detection System consists of several integrated technologies, including a Flutter mobile application, a Laravel backend application, a MySQL database and a Python-based Artificial Intelligence service. Each component requires appropriate hardware and software resources to support development, testing and deployment. The following subsections describe the hardware and software requirements adopted during this study.
+3.3.1 Hardware Requirements
+Hardware requirements refer to the physical computing resources required to develop, test and deploy the proposed system. Since the project involves mobile application development, web application development and deep learning model training, a computer with sufficient processing power, memory and storage capacity is required to support these activities efficiently. Furthermore, an Android smartphone is required for testing the mobile application under real operating conditions.
+Table 3.2 presents the minimum hardware specifications required for the development and deployment of the proposed AI-Powered Mobile Crop Disease Detection System.
+Table 3.2: Hardware Requirements
+Hardware Component
+Minimum Specification
+Recommended Specification
+Processor
+Intel Core i5 (8th Generation) or AMD Ryzen 5
+Intel Core i7 (10th Generation) or AMD Ryzen 7
+Random Access Memory (RAM)
+8 GB
+16 GB or higher
+Storage
+256 GB SSD
+512 GB SSD or higher
+Graphics Processing Unit (GPU)
+Integrated Graphics
+NVIDIA GeForce GTX 1650 or higher
+Mobile Device
+Android Smartphone (Android 10 or later)
+Android Smartphone (Android 13 or later)
+Internet Connection
+Broadband Internet
+High-speed Fibre Connection
+The processor performs software compilation, backend execution and Artificial Intelligence model training. Although the selected MobileNetV2 architecture is computationally efficient, deep learning model training remains computationally intensive and benefits significantly from increased processing capability and dedicated graphics hardware. Goodfellow, Bengio and Courville (2016) note that Graphics Processing Units (GPUs) substantially accelerate deep learning computations by enabling parallel mathematical operations during neural network training.
+Sufficient Random Access Memory (RAM) is also required to support simultaneous execution of Android Studio, Visual Studio Code, Laravel, MySQL, Python and TensorFlow. Increasing memory capacity improves multitasking performance and reduces execution delays encountered during software development.
+An Android smartphone is required to test the Flutter mobile application because the proposed system depends on smartphone hardware such as the camera for image acquisition. Testing on a physical device ensures that application performance closely reflects real-world usage conditions.
+3.3.2 Software Requirements
+Software requirements refer to the applications, frameworks and development tools used during the design, implementation and testing of the proposed system. Selecting appropriate software technologies improves development efficiency, software maintainability and system reliability. The technologies selected for this study were chosen because they are widely adopted within software engineering and Artificial Intelligence development communities.
+Table 3.3 summarises the software requirements adopted during the development of the proposed system.
+Table 3.3: Software Requirements
+Software
+Version
+Purpose
+Windows 11
+Latest Stable Release
+Development Operating System
+Flutter SDK
+Latest Stable Release
+Mobile Application Development
+Dart SDK
+Latest Stable Release
+Flutter Programming Language
+Android Studio
+Latest Stable Release
+Android Emulator and SDK Management
+Visual Studio Code
+Latest Stable Release
+Source Code Development
+Laravel Framework
+Version 12
+Backend API Development
+PHP
+Version 8.3 or later
+Laravel Runtime Environment
+Composer
+Latest Stable Release
+PHP Dependency Management
+Python
+Version 3.12
+Artificial Intelligence Development
+TensorFlow
+Latest Stable Release
+Deep Learning Framework
+OpenCV
+Latest Stable Release
+Image Processing
+MySQL Community Server
+Version 8.x
+Relational Database Management
+XAMPP
+Latest Stable Release
+Local Development Environment
+Git
+Latest Stable Release
+Version Control
+GitHub
+Web Platform
+Source Code Repository and Collaboration
+Postman
+Latest Stable Release
+REST API Testing
+Flutter was selected because it enables cross-platform mobile application development using a single codebase, thereby reducing development time while maintaining high application performance (Google, 2024). The framework also provides extensive support for responsive user interface design, making it suitable for developing applications intended for farmers with varying levels of technological experience.
+Laravel 12 was selected as the backend framework because it provides a secure and well-structured environment for developing RESTful APIs, implementing authentication and managing business logic. Its Model-View-Controller (MVC) architecture promotes code organisation and maintainability while simplifying communication between the Flutter mobile application and the Artificial Intelligence service (Laravel Holdings, 2025).
+Python was selected because it has become the dominant programming language for Artificial Intelligence and machine learning research due to its extensive ecosystem of scientific computing libraries. TensorFlow provides efficient tools for designing, training and deploying deep learning models, while OpenCV provides advanced image processing capabilities required for preparing crop leaf images before classification (TensorFlow Developers, 2024; OpenCV Team, 2024).
+MySQL was selected as the relational database management system because it provides reliable data storage, supports Structured Query Language (SQL) operations and integrates seamlessly with Laravel through the Eloquent Object Relational Mapping framework. Oracle Corporation (2024) notes that MySQL remains one of the world's most widely used relational database systems due to its performance, scalability and reliability.
+Collectively, these hardware and software requirements provide an appropriate technological environment for developing, testing and deploying the proposed AI-Powered Mobile Crop Disease Detection System.
+3.4 System Design
+System design is the process of transforming system requirements into a structured blueprint that guides software development and implementation. It provides a detailed representation of the system's architecture, components, data structures and interactions, ensuring that all functional and non-functional requirements identified during the analysis phase are adequately addressed. According to Sommerville (2021), system design bridges the gap between requirements engineering and software implementation by defining how the proposed system will operate before development begins.
+The system design adopted for this study follows a modular architecture in which the mobile application, backend services, Artificial Intelligence model and database operate as independent but interconnected components. This architectural approach improves scalability, maintainability and flexibility by allowing each component to perform specialised functions while communicating through secure Application Programming Interfaces (APIs). Such modular architectures have become common in modern software engineering because they simplify maintenance, facilitate system upgrades and improve software reliability (Richards & Ford, 2020).
+The proposed AI-Powered Mobile Crop Disease Detection System consists of four principal components: the Flutter mobile application, the Laravel backend application, the Python-based Artificial Intelligence service and the MySQL database. These components communicate through RESTful APIs to provide real-time crop disease diagnosis and treatment recommendations.
+The following subsections describe the major design artefacts developed for the proposed system.
+3.4.1 System Architecture
+The proposed system adopts a three-tier architecture consisting of the presentation layer, application layer and data layer. The presentation layer comprises the Flutter mobile application through which farmers interact with the system. This layer provides interfaces for user registration, authentication, image capture, disease diagnosis and viewing previous diagnosis records. Flutter was selected because it enables the development of responsive cross-platform mobile applications using a single codebase while maintaining excellent application performance (Google, 2024).
+The application layer consists of two integrated services. The first service is the Laravel backend, which manages user authentication, business logic, API communication and interaction with the MySQL database. The second service is the Python-based Artificial Intelligence inference server responsible for image pre-processing and disease prediction using the trained MobileNetV2 model. Separating the Artificial Intelligence component from the backend application improves modularity and allows the machine learning model to be updated independently without affecting the remainder of the system (Sommerville, 2021).
+The data layer consists of the MySQL relational database, which stores persistent application data including user accounts, disease information, diagnosis history and treatment recommendations. Laravel communicates directly with the database using the Eloquent Object Relational Mapping (ORM) framework, thereby simplifying database operations while maintaining data integrity (Laravel Holdings, 2025).
+Communication between the three architectural layers is achieved through secure RESTful APIs using JSON-formatted data. This architecture ensures efficient information exchange while maintaining loose coupling between software components.
+Figure 3.8: Overall System Architecture
+(Insert professional architecture diagram here.)
+3.4.2 Use Case Diagram
+A use case diagram provides a high-level representation of how users interact with the proposed system. It identifies the primary system actors together with the services provided by the application. According to Dennis, Wixom and Tegarden (2020), use case diagrams assist software developers in understanding user requirements by illustrating system functionality from the user's perspective.
+The proposed system consists of two primary actors:
+Farmer
+The farmer is the principal user of the application and interacts with the system to perform activities including account registration, user authentication, crop image capture, disease diagnosis, viewing diagnosis history and listening to treatment recommendations using the integrated voice assistant.
+Administrator
+The administrator is responsible for maintaining the system by managing registered users, updating disease information, maintaining treatment recommendations and monitoring diagnosis records generated by the application.
+The major use cases identified for the proposed system include:
+Register Account
+Login
+Capture Crop Image
+Upload Crop Image
+Detect Crop Disease
+View Diagnosis Results
+Listen to Voice Output
+View Diagnosis History
+Update Disease Information
+Manage Users
+Logout
+The use case diagram illustrates the interaction between these actors and the corresponding system functions.
+Figure 3.9: Use Case Diagram
+(Insert UML Use Case Diagram here.)
+3.4.3 Activity Diagram
+An activity diagram illustrates the sequence of activities performed during system execution. It provides a visual representation of workflow processes by showing the order in which activities occur and the decisions made during execution. Activity diagrams are widely used in software engineering to describe business processes and software workflows before implementation (Dennis, Wixom & Tegarden, 2020).
+The activity diagram developed for this study begins when the farmer launches the mobile application and authenticates using valid login credentials. After successful authentication, the farmer captures or selects a crop leaf image before submitting it to the Laravel backend. The backend validates the uploaded image before forwarding it to the Artificial Intelligence service for disease prediction. Once the prediction has been completed, the backend retrieves the appropriate treatment recommendations from the MySQL database and returns the diagnosis to the Flutter application. The user then views the diagnosis or listens to the information using the integrated voice assistant.
+If invalid credentials are entered during login or if the uploaded image fails validation, the application displays an appropriate error message and requests corrective action before allowing the process to continue.
+Figure 3.10: Activity Diagram
+(Insert UML Activity Diagram here.)
+3.4.4 System Flowchart
+A system flowchart provides a graphical representation of the logical sequence of operations performed by the application during disease diagnosis. Unlike activity diagrams, flowcharts emphasise processing steps, decisions and data movement throughout the application.
+The proposed system begins by authenticating the user before allowing access to the disease detection module. Following successful authentication, the application captures a crop image, validates the uploaded file and transmits it to the Artificial Intelligence service. The trained MobileNetV2 model analyses the image and returns the predicted disease category together with a confidence score. Laravel retrieves treatment recommendations from the database before returning the diagnosis to the Flutter application for display.
+If the confidence score falls below the predefined threshold, the system requests another image to improve prediction accuracy.
+Figure 3.11: System Flowchart
+(Insert detailed system flowchart here.)
+3.4.5 Entity Relationship Diagram (ERD)
+An Entity Relationship Diagram (ERD) is a conceptual representation of the database structure that illustrates the entities within a system together with the relationships that exist between them. It provides a logical blueprint for database design and assists developers in organising data efficiently while maintaining integrity and minimising redundancy. According to Coronel and Morris (2019), an Entity Relationship Diagram enables database designers to model real-world objects and their relationships before physical database implementation.
+The proposed AI-Powered Mobile Crop Disease Detection System utilises MySQL as its relational database management system. The database was designed using the principles of database normalisation to minimise data redundancy and maintain consistency across related tables. Each entity represents a distinct object within the system, while relationships ensure efficient communication between different datasets.
+The database consists of six primary entities, namely Users, Diagnoses, Diseases, Treatments, Crops and Administrators. These entities collectively support user authentication, disease prediction, treatment recommendation and administrative management of the application.
+Users Entity
+The Users entity stores information relating to farmers who register and use the application. Each registered user is assigned a unique identifier that distinguishes them from other users within the system. The table stores user credentials and profile information required for authentication and personalisation of the application.
+Typical attributes include:
+User ID
+Full Name
+Email Address
+Phone Number
+Password
+Date Created
+Each user may perform multiple disease diagnoses; therefore, a one-to-many relationship exists between the Users entity and the Diagnoses entity.
+Diagnoses Entity
+The Diagnoses entity records every disease prediction generated by the Artificial Intelligence model. Each diagnosis stores information regarding the uploaded crop image, the predicted disease, the confidence score produced by the model and the corresponding diagnosis date.
+Typical attributes include:
+Diagnosis ID
+User ID (Foreign Key)
+Crop ID (Foreign Key)
+Disease ID (Foreign Key)
+Uploaded Image
+Confidence Score
+Diagnosis Date
+Each diagnosis belongs to one registered user and is associated with one crop and one disease.
+Crops Entity
+The Crops entity stores information regarding crop varieties supported by the application. Separating crop information into an independent entity improves database flexibility because additional crop types can be introduced without modifying diagnosis records.
+Typical attributes include:
+Crop ID
+Crop Name
+Scientific Name
+Description
+Each crop may have multiple associated diseases.
+Diseases Entity
+The Diseases entity stores comprehensive information regarding crop diseases recognised by the Artificial Intelligence model. Each disease record contains descriptive information that assists users in understanding the diagnosed condition.
+Typical attributes include:
+Disease ID
+Crop ID (Foreign Key)
+Disease Name
+Symptoms
+Causes
+Prevention Measures
+Each disease may have one or more associated treatment recommendations.
+Treatments Entity
+The Treatments entity stores treatment information corresponding to each recognised crop disease. Maintaining treatment recommendations in an independent table improves maintainability because agricultural recommendations can be updated without modifying disease records.
+Typical attributes include:
+Treatment ID
+Disease ID (Foreign Key)
+Recommended Treatment
+Prevention Advice
+Each treatment belongs to one disease, while each disease may have one or multiple treatment recommendations depending on the severity of the infection.
+Administrators Entity
+The Administrators entity stores information relating to authorised personnel responsible for maintaining the application. Administrators manage disease information, treatment recommendations, crop records and registered users.
+Typical attributes include:
+Administrator ID
+Full Name
+Email Address
+Password
+Role
+Administrative users possess privileges that are not available to ordinary farmers, including the ability to update disease records and monitor system activity.
+The relationships between these entities ensure efficient storage and retrieval of information while maintaining database integrity. A registered user may generate multiple diagnosis records, whereas each diagnosis corresponds to a single crop and a single disease. Similarly, each disease belongs to one crop but may possess multiple treatment recommendations. This relational structure minimises redundancy while improving consistency across the database.
+Figure 3.12 illustrates the Entity Relationship Diagram developed for the proposed AI-Powered Mobile Crop Disease Detection System.
+Figure 3.12: Entity Relationship Diagram
+(A professionally designed Entity Relationship Diagram illustrating the Users, Crops, Diseases, Diagnoses, Treatments and Administrators entities together with their primary keys, foreign keys and relationships will be inserted here.)
+3.4.6 Database Schema
+Following the development of the Entity Relationship Diagram, the logical database schema was designed to define the tables, primary keys, foreign keys and relationships required for implementing the database in MySQL. The schema provides the structural blueprint that guides the creation of database tables during system implementation. According to Coronel and Morris (2019), a well-designed database schema improves data consistency, reduces redundancy and enhances query performance.
+The proposed database schema was developed using MySQL and follows the principles of the relational database model. Each table contains a primary key that uniquely identifies each record, while foreign keys establish relationships between related entities. Laravel's Eloquent Object Relational Mapping (ORM) will be used to implement these relationships during backend development, simplifying database interactions while maintaining referential integrity (Laravel Holdings, 2025).
+Table 3.4 presents a summary of the primary tables included in the database schema.
+Table 3.4: Summary of Database Tables
+Table
+Primary Key
+Description
+Users
+user_id
+Stores registered farmer information.
+Crops
+crop_id
+Stores crop varieties supported by the application.
+Diseases
+disease_id
+Stores disease descriptions and symptoms.
+Treatments
+treatment_id
+Stores treatment recommendations and preventive measures.
+Diagnoses
+diagnosis_id
+Stores disease prediction records generated by the AI model.
+Administrators
+admin_id
+Stores administrator account information.
+The database schema was designed to support efficient data retrieval, maintain referential integrity and facilitate future expansion of the application. Additional entities can be incorporated into the database without requiring significant structural modifications, thereby improving the scalability and maintainability of the proposed system.
+3.4.7 Data Dictionary
+A data dictionary is a structured catalogue that provides detailed information about the data elements stored within a database. It describes the purpose of each table together with its attributes, data types and constraints. According to Coronel and Morris (2019), a data dictionary serves as an important reference during system development because it promotes consistency in database implementation and simplifies database maintenance.
+The data dictionary developed for the proposed AI-Powered Mobile Crop Disease Detection System defines the primary tables required to support user management, crop disease diagnosis and treatment recommendation. Each table was designed to support the functional requirements identified during the requirements analysis phase while maintaining referential integrity through the use of primary and foreign keys.
+Table 3.5: Data Dictionary for the Users Table
+Field Name
+Data Type
+Size
+Constraint
+Description
+user_id
+BIGINT
+20
+Primary Key, Auto Increment
+Unique identifier for each registered user
+full_name
+VARCHAR
+100
+Not Null
+Full name of the farmer
+email
+VARCHAR
+100
+Unique, Not Null
+User email address
+phone_number
+VARCHAR
+20
+Not Null
+User contact number
+password
+VARCHAR
+255
+Not Null
+Encrypted user password
+created_at
+TIMESTAMP
+-
+Default Current Timestamp
+Date account was created
+updated_at
+TIMESTAMP
+-
+Nullable
+Date account was last updated
+Table 3.6: Data Dictionary for the Crops Table
+Field Name
+Data Type
+Size
+Constraint
+Description
+crop_id
+BIGINT
+20
+Primary Key, Auto Increment
+Unique crop identifier
+crop_name
+VARCHAR
+100
+Not Null
+Name of the crop
+scientific_name
+VARCHAR
+150
+Nullable
+Scientific name of the crop
+description
+TEXT
+-
+Nullable
+Description of the crop
+Table 3.7: Data Dictionary for the Diseases Table
+Field Name
+Data Type
+Size
+Constraint
+Description
+disease_id
+BIGINT
+20
+Primary Key, Auto Increment
+Unique disease identifier
+crop_id
+BIGINT
+20
+Foreign Key
+Associated crop
+disease_name
+VARCHAR
+100
+Not Null
+Name of the disease
+symptoms
+TEXT
+-
+Not Null
+Disease symptoms
+causes
+TEXT
+-
+Nullable
+Causes of the disease
+prevention
+TEXT
+-
+Nullable
+Prevention measures
+Table 3.8: Data Dictionary for the Treatments Table
+Field Name
+Data Type
+Size
+Constraint
+Description
+treatment_id
+BIGINT
+20
+Primary Key, Auto Increment
+Unique treatment identifier
+disease_id
+BIGINT
+20
+Foreign Key
+Associated disease
+treatment
+TEXT
+-
+Not Null
+Recommended treatment
+recommendation
+TEXT
+-
+Nullable
+Additional treatment advice
+Table 3.9: Data Dictionary for the Diagnoses Table
+Field Name
+Data Type
+Size
+Constraint
+Description
+diagnosis_id
+BIGINT
+20
+Primary Key, Auto Increment
+Unique diagnosis identifier
+user_id
+BIGINT
+20
+Foreign Key
+User who submitted the image
+crop_id
+BIGINT
+20
+Foreign Key
+Crop analysed
+disease_id
+BIGINT
+20
+Foreign Key
+Predicted disease
+image_path
+VARCHAR
+255
+Not Null
+Uploaded image location
+confidence_score
+DECIMAL
+5,2
+Not Null
+Prediction confidence (%)
+diagnosis_date
+TIMESTAMP
+-
+Default Current Timestamp
+Date of diagnosis
+Table 3.10: Data Dictionary for the Administrators Table
+Field Name
+Data Type
+Size
+Constraint
+Description
+admin_id
+BIGINT
+20
+Primary Key, Auto Increment
+Administrator identifier
+full_name
+VARCHAR
+100
+Not Null
+Administrator name
+email
+VARCHAR
+100
+Unique
+Administrator email
+password
+VARCHAR
+255
+Not Null
+Encrypted password
+role
+VARCHAR
+50
+Not Null
+Administrator role
+The data dictionary provides a detailed description of the database structure and supports the implementation of the relational database using MySQL. It also serves as a valuable reference during backend development by ensuring consistency in database design and facilitating communication between the database, Laravel backend and Artificial Intelligence service.
+3.5 Tools and Materials Used
+The successful development of the AI-Powered Mobile Crop Disease Detection System required the use of various hardware devices, software applications, programming frameworks and development tools. These tools were carefully selected based on their compatibility, reliability, ease of integration and suitability for developing intelligent mobile applications. The combination of Flutter, Laravel, MySQL and Python provided a robust development environment capable of supporting mobile application development, backend service implementation, database management and Artificial Intelligence model deployment.
+Flutter was selected as the primary mobile application development framework because it supports cross-platform application development from a single codebase while maintaining near-native performance. Flutter also provides an extensive collection of user interface components that simplify the development of responsive and user-friendly mobile applications (Google, 2024).
+Laravel 12 was selected as the backend framework because of its secure authentication system, MVC architecture, middleware support and RESTful API capabilities. The framework simplifies communication between the Flutter mobile application and the Artificial Intelligence service while providing efficient interaction with the MySQL database (Laravel Holdings, 2025).
+Python was used to develop the Artificial Intelligence component because it offers comprehensive support for machine learning and computer vision through libraries such as TensorFlow, Keras and OpenCV. TensorFlow provides efficient deep learning model development and deployment capabilities, while OpenCV facilitates image processing and manipulation before classification (TensorFlow Developers, 2024; OpenCV Team, 2024).
+MySQL was selected as the relational database management system because it provides reliable data storage, high performance and seamless integration with Laravel through the Eloquent ORM. Git and GitHub were used for version control and source code management, enabling systematic tracking of software changes throughout development.
+Table 3.11 summarises the major software tools used during the development of the proposed system.
+Table 3.11: Software Tools Used
+Tool
+Purpose
+Flutter
+Mobile application development
+Dart
+Flutter programming language
+Laravel 12
+Backend API development
+PHP 8.3
+Laravel runtime environment
+MySQL
+Database management
+Python 3.12
+Artificial Intelligence development
+TensorFlow
+Deep learning framework
+OpenCV
+Image processing
+Android Studio
+Android SDK and emulator
+Visual Studio Code
+Source code development
+Composer
+PHP dependency management
+Git
+Version control
+GitHub
+Source code repository
+Postman
+API testing
+The selected tools collectively provide a complete software engineering environment capable of supporting the design, implementation, testing and deployment of the proposed AI-Powered Mobile Crop Disease Detection System.
+3.6 Development Procedure
+The development procedure describes the systematic process that will be followed to design, implement, integrate and evaluate the proposed AI-Powered Mobile Crop Disease Detection System. A structured development procedure is essential because it provides a clear roadmap for software implementation while ensuring that each system component is developed, tested and integrated in an organised manner. According to Pressman and Maxim (2020), following a well-defined software development procedure improves software quality, reduces development risks and enhances project management throughout the software development lifecycle.
+The proposed system will be developed using the Agile Software Development Methodology, which emphasises iterative development, continuous testing and regular refinement of software components. Agile was selected because it allows software functionality to be developed incrementally while accommodating improvements identified during testing and user evaluation. Unlike traditional linear development approaches, Agile encourages continuous stakeholder feedback and enables developers to respond effectively to changing requirements throughout the project (Sommerville, 2021).
+The development procedure adopted in this study consists of eight major phases, each contributing towards the successful implementation of the proposed system.
+3.6.1 Requirements Analysis
+The first phase involves analysing both the functional and non-functional requirements identified during the requirements engineering process. During this phase, system objectives, user requirements and software specifications are reviewed to establish a clear understanding of the expected functionality of the application. The information gathered during this stage forms the foundation upon which the remaining phases of development are based (Creswell & Creswell, 2023).
+3.6.2 User Interface Design
+Following the completion of requirements analysis, the graphical user interface of the Flutter mobile application will be designed. User interface design focuses on creating an intuitive, accessible and responsive application suitable for farmers with different levels of digital literacy. The interface will incorporate simple navigation menus, clearly labelled controls and large interactive buttons to improve usability, particularly for elderly users. Green and black will be used as the application's primary colour scheme because green is commonly associated with agriculture and plant health, while black improves contrast and readability.
+Wireframes and interface prototypes will be produced before implementation to evaluate the usability of the application layout and identify any necessary improvements before software development begins.
+3.6.3 Database Development
+Following interface design, the MySQL database will be developed using the database schema presented in Section 3.4. The database will consist of tables responsible for storing user information, crop details, disease descriptions, treatment recommendations, diagnosis history and administrator records.
+Primary keys and foreign keys will be implemented to establish relationships between tables and maintain referential integrity. Database normalisation techniques will also be applied to reduce redundancy and improve data consistency. Laravel's Eloquent Object Relational Mapping (ORM) framework will be utilised to simplify communication between the backend application and the database (Laravel Holdings, 2025).
+3.6.4 Backend Development
+The backend application will be implemented using Laravel 12 following the Model-View-Controller (MVC) architectural pattern. The backend will be responsible for user authentication, business logic, API development and communication with both the MySQL database and the Artificial Intelligence service.
+Several RESTful API endpoints will be developed to support key application functionalities, including user registration, login, crop image upload, diagnosis retrieval, diagnosis history and administrator operations. Laravel Sanctum will be implemented to secure API communication through token-based authentication, ensuring that only authorised users can access protected system resources (Laravel Holdings, 2025).
+Input validation, exception handling and secure password hashing will also be incorporated to improve application security and protect sensitive user information.
+3.6.5 Artificial Intelligence Model Development
+The Artificial Intelligence component will be developed using Python together with TensorFlow and OpenCV. The MobileNetV2 Convolutional Neural Network architecture will be trained using the prepared dataset described in Section 3.2. Image pre-processing techniques including resizing, normalisation and data augmentation will be applied before training to improve classification performance.
+Following training, the model will be evaluated using the testing dataset and exported as a deployable model capable of receiving prediction requests from the Laravel backend. The trained model will subsequently be deployed as an independent inference service responsible for analysing uploaded crop images and returning disease predictions.
+3.6.6 Flutter Mobile Application Development
+The mobile application will be implemented using Flutter and the Dart programming language. Flutter was selected because it enables efficient cross-platform application development while providing high-performance user interfaces and extensive support for mobile hardware integration (Google, 2024).
+The mobile application will provide functionality for:
+User registration and authentication.
+Capturing crop leaf images using the smartphone camera.
+Selecting images from the device gallery.
+Uploading images for disease analysis.
+Viewing disease diagnosis results.
+Displaying treatment recommendations.
+Accessing diagnosis history.
+Listening to diagnosis information through the integrated Shona and English voice assistant.
+State management techniques will be implemented to ensure efficient communication between the user interface and backend services while maintaining application responsiveness.
+3.6.7 System Integration
+After individual software components have been developed, the Flutter application, Laravel backend, MySQL database and Artificial Intelligence service will be integrated into a single operational system.
+Integration testing will be conducted throughout this phase to verify that information flows correctly between system components. The integration process will confirm that uploaded crop images are successfully transmitted to the Artificial Intelligence service, disease predictions are returned correctly and diagnosis records are stored within the MySQL database without data loss or communication failures.
+3.6.8 Deployment
+The final phase involves deploying the completed application within a suitable production environment. The Laravel backend and MySQL database may be hosted on a cloud-based web server, while the Artificial Intelligence inference service may be deployed using a dedicated Python server. The Flutter application will be packaged as an Android application package (APK) for installation on compatible Android smartphones.
+Following deployment, final system verification will be conducted to ensure that all application features operate correctly within the production environment before release to end users.
+Figure 3.13: Development Procedure
+(A professional flowchart illustrating the complete software development procedure from requirements analysis to deployment will be inserted here.)
+3.7 Testing Methods
+Testing is a fundamental phase of software development because it verifies that the developed application performs according to its intended specifications while identifying defects that may affect functionality, usability or performance. According to Pressman and Maxim (2020), software testing is a systematic process of evaluating software components to determine whether they satisfy specified requirements and produce the expected results. Effective software testing improves software quality, enhances reliability and reduces the likelihood of software failure after deployment.
+The proposed AI-Powered Mobile Crop Disease Detection System consists of multiple integrated components, including the Flutter mobile application, Laravel backend, MySQL database and Python-based Artificial Intelligence service. Since each component performs specialised functions, a comprehensive testing strategy was adopted to ensure that individual modules function correctly before the integrated system is evaluated. The testing process therefore consists of unit testing, integration testing, system testing, user acceptance testing, performance testing and Artificial Intelligence model evaluation.
+3.7.1 Unit Testing
+Unit testing was conducted to verify that individual software modules function correctly before integration with other system components. Each module was tested independently to ensure that it produced the expected output under different operating conditions. Sommerville (2021) states that unit testing simplifies software debugging by isolating individual components and identifying defects before complete system integration.
+For the Flutter mobile application, unit testing focused on user interface components, form validation, authentication screens and image upload functionality. Individual widgets were tested to ensure that user interactions produced the expected behaviour.
+Within the Laravel backend, unit testing was performed on controllers, models, middleware and API endpoints. Each controller method was evaluated independently to verify that user requests were processed correctly and that appropriate responses were returned.
+The Artificial Intelligence component was also subjected to unit testing by evaluating individual functions responsible for image pre-processing, dataset loading, model inference and prediction generation. This ensured that each processing stage operated correctly before integration into the complete prediction pipeline.
+Table 3.12: Unit Testing
+Module
+Test Objective
+Expected Outcome
+User Registration
+Verify successful account creation
+User account created successfully
+User Authentication
+Verify login credentials
+User successfully authenticated
+Image Upload
+Verify image validation
+Valid image accepted
+Disease Prediction
+Verify prediction function
+Disease prediction returned
+Diagnosis History
+Verify diagnosis retrieval
+Previous diagnoses displayed
+Voice Assistant
+Verify voice output
+Diagnosis read successfully
+The successful completion of unit testing ensured that individual software modules operated correctly before progressing to system integration.
+3.7.2 Integration Testing
+Integration testing was performed after combining the Flutter mobile application, Laravel backend, Artificial Intelligence service and MySQL database into a single operational system. The objective of integration testing was to verify that information flowed correctly between interconnected system components without communication failures or data inconsistencies.
+During this phase, API communication between Flutter and Laravel was evaluated to ensure that user requests were transmitted correctly and appropriate JSON responses were returned. Communication between Laravel and the Python Artificial Intelligence service was also verified to ensure that uploaded crop images were successfully analysed and disease predictions returned accurately. Database operations were tested to confirm that diagnosis records were correctly stored and retrieved from MySQL.
+According to Pressman and Maxim (2020), integration testing is essential because many software defects arise from interactions between independently developed modules rather than from the modules themselves.
+Table 3.13: Integration Testing
+Components
+Expected Result
+Flutter – Laravel API
+Successful request and response
+Laravel – Python AI Service
+Disease prediction successfully returned
+Laravel – MySQL Database
+Database records correctly stored
+Flutter – Diagnosis History
+Diagnosis history successfully displayed
+The integration tests confirmed that communication between all software components occurred successfully and that information was exchanged accurately throughout the application.
+3.7.3 System Testing
+System testing was conducted after completing software integration to determine whether the complete application satisfied the functional and non-functional requirements identified during system analysis. Unlike unit testing and integration testing, system testing evaluates the application as a complete software product operating under realistic conditions.
+The testing process evaluated all major application functions, including user registration, authentication, image upload, disease prediction, treatment recommendation, diagnosis history and administrator operations. Each function was executed using realistic user scenarios to verify that the application performed as expected without unexpected software failures.
+System testing also evaluated navigation between application screens, response time, data consistency and error handling mechanisms. Successful completion of this phase demonstrated that the proposed system satisfied the requirements established during system analysis.
+3.7.4 Artificial Intelligence Model Evaluation
+Unlike conventional software systems, Artificial Intelligence applications require additional evaluation to determine the predictive performance of the trained model. Consequently, the proposed Convolutional Neural Network will be evaluated using several widely accepted machine learning performance metrics.
+The primary evaluation metric will be classification accuracy, which measures the proportion of correctly classified crop leaf images relative to the total number of testing images. Although accuracy provides an overall indication of model performance, it may produce misleading results when datasets contain imbalanced classes (Powers, 2020). Therefore, additional evaluation metrics will also be utilised.
+Precision will be calculated to determine the proportion of disease predictions that are correctly classified, while recall will evaluate the model's ability to identify all diseased crops correctly. The F1-score will subsequently combine precision and recall into a single performance measure, providing a balanced assessment of model effectiveness.
+A confusion matrix will also be generated to provide a detailed visual representation of the classification performance for each disease category. The confusion matrix enables identification of disease classes that are frequently misclassified, thereby supporting future improvements to the model (Goodfellow, Bengio & Courville, 2016).
+3.7.5 Performance Testing
+Performance testing was conducted to evaluate the responsiveness and efficiency of the proposed system under normal operating conditions. This phase measured image upload speed, API response time, database query performance and Artificial Intelligence prediction time.
+Performance testing also assessed memory consumption and processor utilisation during simultaneous execution of the Flutter application, Laravel backend and Artificial Intelligence service. Maintaining acceptable response times is essential because delays in disease diagnosis may reduce user confidence in the application.
+The expected system response time for disease prediction is less than five seconds under normal network conditions.
+Table 3.14: Performance Testing
+Test
+Expected Response Time
+User Login
+Less than 2 seconds
+Image Upload
+Less than 3 seconds
+Disease Prediction
+Less than 5 seconds
+Diagnosis Retrieval
+Less than 2 seconds
+3.7.6 User Acceptance Testing
+User Acceptance Testing (UAT) will be conducted to determine whether the proposed application satisfies the expectations of its intended users. This phase involves allowing representative users, including farmers and agricultural extension personnel, to interact with the completed application and provide feedback regarding its functionality, usability and overall user experience.
+Participants will evaluate several aspects of the application, including the ease of navigation, responsiveness of the user interface, clarity of diagnosis results, usefulness of treatment recommendations and effectiveness of the integrated Shona voice assistant. User feedback will be analysed to identify areas requiring improvement before the application is considered ready for deployment.
+According to Pressman and Maxim (2020), User Acceptance Testing provides valuable confirmation that software satisfies business requirements and is suitable for practical use within its intended environment.
+Table 3.15: User Acceptance Testing Criteria
+Evaluation Criterion
+Objective
+Ease of Navigation
+Determine application usability
+Interface Design
+Assess visual appeal and accessibility
+Prediction Accuracy
+Evaluate confidence in diagnosis results
+Voice Assistant
+Assess usefulness of spoken recommendations
+Overall Satisfaction
+Measure user acceptance
+3.7 Summary
+The testing strategy adopted for this study combines traditional software engineering testing techniques with Artificial Intelligence performance evaluation methods. Unit testing, integration testing, system testing, performance testing and User Acceptance Testing collectively ensure that the Flutter mobile application, Laravel backend, MySQL database and Python-based Artificial Intelligence service operate reliably as an integrated system. In addition, machine learning evaluation metrics such as accuracy, precision, recall, F1-score and confusion matrix analysis provide objective measures of the predictive capability of the developed Convolutional Neural Network. Collectively, these testing procedures provide confidence that the proposed AI-Powered Mobile Crop Disease Detection System will satisfy both the functional and non-functional requirements established during the requirements analysis phase.
+3.8 Ethical and Safety Considerations
+Ethical and safety considerations are fundamental in the development and deployment of software systems, particularly those that process user information and utilise Artificial Intelligence to support decision-making. These considerations ensure that the developed system operates responsibly, protects user privacy and complies with accepted ethical principles governing software development. According to the Association for Computing Machinery (ACM, 2018), software developers have a professional responsibility to design systems that are secure, transparent, reliable and beneficial to society.
+The proposed AI-Powered Mobile Crop Disease Detection System processes personal information submitted by registered users together with images of crops captured using mobile devices. Although crop images generally do not contain highly sensitive personal information, user registration details, diagnosis history and uploaded images constitute personal data that must be protected against unauthorised access. Consequently, appropriate security mechanisms will be implemented to safeguard user information throughout the system.
+3.8.1 Privacy and Confidentiality
+The system will collect only the information necessary for user registration, authentication and disease diagnosis. Personal information including names, email addresses, telephone numbers and diagnosis records will be stored securely within the MySQL database. Access to this information will be restricted to authorised users and system administrators through authentication and role-based access control.
+Password credentials will never be stored in plain text. Instead, Laravel's password hashing mechanisms will be utilised to encrypt passwords before storage, thereby reducing the risk of unauthorised access should the database become compromised. Laravel's built-in authentication framework provides secure password management and protection against common security vulnerabilities such as SQL injection and Cross-Site Request Forgery attacks (Laravel Holdings, 2025).
+In addition, communication between the Flutter mobile application and the Laravel backend should be secured using Hypertext Transfer Protocol Secure (HTTPS). Encrypting data transmitted across the network reduces the risk of interception by malicious third parties and improves the overall security of the application (OWASP Foundation, 2023).
+3.8.2 Responsible Use of Artificial Intelligence
+Artificial Intelligence technologies should be used responsibly because incorrect predictions may influence users' decisions regarding crop management. Although the proposed system is designed to provide accurate disease diagnosis, it should not replace professional agricultural advice. Instead, the application should function as a decision-support tool that assists farmers in identifying possible crop diseases before seeking confirmation from qualified agricultural extension officers where necessary.
+Researchers have emphasised that Artificial Intelligence systems should remain transparent regarding their limitations to prevent users from placing excessive confidence in automated predictions (European Commission, 2021). Consequently, the proposed application will display a confidence score together with every prediction to indicate the certainty associated with the diagnosis. Where prediction confidence is low, users will be encouraged to capture another image or consult agricultural professionals before implementing treatment recommendations.
+3.8.3 Dataset Integrity and Bias
+The quality of an Artificial Intelligence system depends largely upon the quality and representativeness of the dataset used during model training. Training datasets that are biased or unrepresentative may produce discriminatory or inaccurate predictions when applied in practical environments. Therefore, efforts will be made to utilise a diverse dataset containing healthy and diseased crop images captured under varying environmental conditions.
+The dataset will be reviewed to remove duplicate, corrupted and incorrectly labelled images before training the deep learning model. Furthermore, data augmentation techniques will be employed to improve dataset diversity and reduce the likelihood of model overfitting. According to Barbedo (2022), improving dataset quality significantly enhances the robustness and generalisation capability of deep learning models developed for plant disease detection.
+3.8.4 System Security
+Software security is an essential consideration because the proposed application communicates through internet-based services. Appropriate security controls will therefore be implemented throughout the system to minimise potential cyber security threats.
+Laravel provides numerous built-in security features, including authentication middleware, input validation, encrypted password storage, protection against SQL injection attacks and Cross-Site Request Forgery protection (Laravel Holdings, 2025). These features will be utilised to secure backend operations and protect user information.
+Similarly, uploaded crop images will undergo server-side validation before being processed by the Artificial Intelligence service. Restricting accepted file formats and limiting upload sizes reduces the likelihood of malicious file uploads while improving overall system reliability.
+3.8.5 Accessibility and Inclusivity
+One of the principal objectives of the proposed system is to improve access to crop disease diagnosis for farmers with varying levels of technological experience. Consequently, accessibility considerations have influenced both the design and implementation of the mobile application.
+The user interface will incorporate large interactive buttons, readable typography and simple navigation structures suitable for elderly users and individuals with limited digital literacy. Furthermore, the application will integrate a bilingual voice assistant capable of communicating diagnosis results and treatment recommendations in both English and Shona. This functionality improves accessibility for users who experience reading difficulties or who prefer receiving agricultural information in their local language.
+Designing inclusive software applications promotes wider technology adoption and contributes towards reducing the digital divide within rural communities (World Bank, 2021).
+3.8.6 Ethical Approval
+This study will be conducted in accordance with the ethical guidelines established by the institution under which the research is undertaken. Any data collected during system testing involving human participants will be obtained only after participants have been informed of the purpose of the study and have voluntarily agreed to participate.
+Participants involved in User Acceptance Testing will retain the right to withdraw from the study at any stage without penalty. Information collected during testing will be used solely for academic purposes and will not be disclosed to unauthorised third parties.
+3.8.7 Chapter Summary
+This chapter presented the methodology adopted in the design and development of the proposed AI-Powered Mobile Crop Disease Detection System. It described the research design, requirements analysis, data collection and dataset preparation, image pre-processing techniques, selection of the deep learning model, Artificial Intelligence model development, system architecture, workflow, hardware and software requirements, database design, development procedure and testing strategy. The chapter also discussed the ethical and safety considerations that guided the implementation of the proposed system.
+The methodology provides a structured framework for developing an intelligent mobile application capable of assisting farmers in the early detection and management of crop diseases. By integrating Flutter, Laravel, MySQL and a Python-based Artificial Intelligence service, the proposed architecture supports secure communication, efficient data management and reliable disease prediction. The subsequent chapter will present the implementation of the system based on the methodology described in this chapter.
