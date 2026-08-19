@@ -6,3 +6,7 @@ AI Service/data/raw/
 AI Service/data/processed/
 AI Service/models/*.keras
 AI Service/models/class_names.txt
+
+# Python runtime caches must never be deployed or tracked.
+__pycache__/
+*.py[cod]
