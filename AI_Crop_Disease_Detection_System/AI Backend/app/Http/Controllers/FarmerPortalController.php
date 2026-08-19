@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\ZimbabwePhone;
 use App\Models\Crop;
 use App\Models\Diagnosis;
 use App\Models\Disease;
@@ -155,9 +156,11 @@ class FarmerPortalController extends Controller
             return redirect('/login');
         }
 
+        $request->merge(['phone' => ZimbabwePhone::normalize($request->input('phone'))]);
+
         $user->update($request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:30'],
+            'phone' => ZimbabwePhone::rules(),
             'language_preference' => ['required', Rule::in(['en', 'sn'])],
         ]));
 

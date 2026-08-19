@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Exceptions\NonLeafImageException;
 use App\Models\Crop;
 use App\Models\Disease;
 use App\Services\AiPredictionService;
@@ -51,5 +52,22 @@ class AiPredictionServiceTest extends TestCase
         $this->assertSame(81.23, $prediction->confidence);
 
         Http::assertSent(fn ($request) => ! array_key_exists('crop_id', $request->data()));
+    }
+
+    public function test_it_propagates_non_leaf_rejections_from_the_ai_service(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('diagnoses/not-a-leaf.png', 'image-bytes');
+        Http::fake([
+            'https://ai-service.test/predict' => Http::response([
+                'detail' => 'No crop leaf was detected. Retake a clear photo.',
+            ], 422),
+        ]);
+        config(['services.ai.url' => 'https://ai-service.test']);
+
+        $this->expectException(NonLeafImageException::class);
+        $this->expectExceptionMessage('No crop leaf was detected. Retake a clear photo.');
+
+        app(AiPredictionService::class)->predict('diagnoses/not-a-leaf.png', null);
     }
 }

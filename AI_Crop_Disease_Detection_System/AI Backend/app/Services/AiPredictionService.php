@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\NonLeafImageException;
 use App\Models\Disease;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -28,6 +29,16 @@ class AiPredictionService
                 )
                 ->post(rtrim($serviceUrl, '/').'/predict', $formData);
 
+            if ($response->status() === 422) {
+                $detail = $response->json('detail');
+
+                throw new NonLeafImageException(
+                    is_string($detail) && $detail !== ''
+                        ? $detail
+                        : 'No crop leaf was detected. Retake a clear photo with one leaf filling most of the frame.'
+                );
+            }
+
             if (! $response->successful()) {
                 return $this->fallbackPrediction($cropId);
             }
@@ -45,6 +56,8 @@ class AiPredictionService
                 label: $label,
                 confidence: $this->normalizeConfidence((float) $confidence),
             );
+        } catch (NonLeafImageException $exception) {
+            throw $exception;
         } catch (Throwable) {
             return $this->fallbackPrediction($cropId);
         }

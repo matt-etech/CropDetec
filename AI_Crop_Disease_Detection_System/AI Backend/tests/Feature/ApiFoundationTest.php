@@ -57,7 +57,7 @@ class ApiFoundationTest extends TestCase
         $this->withHeader('Authorization', "Bearer {$token}")
             ->patchJson('/api/me', [
                 'name' => 'Updated Farmer',
-                'phone' => '+263722222222',
+                'phone' => '+263732222222',
                 'language_preference' => 'sn',
             ])
             ->assertOk()
@@ -86,6 +86,10 @@ class ApiFoundationTest extends TestCase
             ->getJson('/api/crops')
             ->assertOk()
             ->assertJsonFragment(['name' => 'Madomasi'])
+            ->assertJsonFragment([
+                'name' => 'Madomasi',
+                'canonical_name' => 'Tomato',
+            ])
             ->assertJsonFragment(['name' => 'Chibage'])
             ->assertJsonFragment(['symptoms' => 'Mavara ebrown akatenderera ane madenderedzwa mukati, mashizha anoita yero, uye mashizha anodonha zvishoma nezvishoma.']);
 
@@ -136,6 +140,32 @@ class ApiFoundationTest extends TestCase
         ])
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['name', 'email', 'password']);
+    }
+
+    public function test_registration_rejects_non_zimbabwe_mobile_numbers(): void
+    {
+        $this->postJson('/api/register', [
+            'name' => 'Invalid Phone Farmer',
+            'email' => 'invalid-phone@example.com',
+            'phone' => '+264811234567',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('phone');
+    }
+
+    public function test_registration_normalizes_a_local_zimbabwe_mobile_number(): void
+    {
+        $this->postJson('/api/register', [
+            'name' => 'Local Phone Farmer',
+            'email' => 'local-phone@example.com',
+            'phone' => '077 123 4567',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('user.phone', '+263771234567');
     }
 
     public function test_api_responses_include_cors_headers_for_allowed_origins(): void
@@ -213,6 +243,40 @@ class ApiFoundationTest extends TestCase
             ->assertJsonPath('diagnosis.predicted_label', 'maize_leaf_blight')
             ->assertJsonPath('diagnosis.confidence', '73.00')
             ->assertJsonMissingPath('diagnosis.image_path');
+    }
+
+    public function test_non_leaf_upload_is_rejected_and_not_saved_to_history(): void
+    {
+        Storage::fake('public');
+        Http::fake([
+            'https://ai-service.test/predict' => Http::response([
+                'detail' => 'No crop leaf was detected. Retake a clear photo with one leaf filling most of the frame.',
+            ], 422),
+        ]);
+        config(['services.ai.url' => 'https://ai-service.test']);
+        $this->seed();
+
+        $token = $this->postJson('/api/register', [
+            'name' => 'Camera Farmer',
+            'email' => 'camera@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ])->json('token');
+
+        $this->withHeader('Authorization', "Bearer {$token}")
+            ->postJson('/api/diagnoses', [
+                'crop_id' => 1,
+                'image' => $this->fakePngUpload(),
+            ])
+            ->assertUnprocessable()
+            ->assertJsonPath('code', 'crop_leaf_not_detected')
+            ->assertJsonPath(
+                'message',
+                'No crop leaf was detected. Retake a clear photo with one leaf filling most of the frame.'
+            );
+
+        $this->assertDatabaseCount('diagnoses', 0);
+        $this->assertSame([], Storage::disk('public')->files('diagnoses'));
     }
 
     public function test_api_diagnosis_payload_uses_shona_for_shona_farmer(): void
@@ -423,7 +487,7 @@ class ApiFoundationTest extends TestCase
         $this->post('/register', [
             'name' => 'Portal Farmer',
             'email' => 'portal@example.com',
-            'phone' => '+263744444444',
+            'phone' => '+263774444444',
             'language_preference' => 'en',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -470,7 +534,7 @@ class ApiFoundationTest extends TestCase
         $this->post('/register', [
             'name' => 'Shona Farmer',
             'email' => 'shona@example.com',
-            'phone' => '+263755555555',
+            'phone' => '+263775555555',
             'language_preference' => 'sn',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -500,7 +564,7 @@ class ApiFoundationTest extends TestCase
         $this->post('/register', [
             'name' => 'Library Farmer',
             'email' => 'library-shona@example.com',
-            'phone' => '+263766666666',
+            'phone' => '+263776666666',
             'language_preference' => 'sn',
             'password' => 'password123',
             'password_confirmation' => 'password123',

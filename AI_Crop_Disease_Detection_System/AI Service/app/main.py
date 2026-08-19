@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from PIL import Image, UnidentifiedImageError
 
-from app.model import predict_with_model
+from app.model import NonLeafImageError, predict_with_model
 
 app = FastAPI(title="AI Crop Disease Prediction Service")
 
@@ -27,7 +27,10 @@ async def predict(
     except UnidentifiedImageError as exc:
         raise HTTPException(status_code=422, detail="Upload a valid crop image.") from exc
 
-    model_prediction = predict_with_model(contents)
+    try:
+        model_prediction = predict_with_model(contents)
+    except NonLeafImageError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     if model_prediction is not None:
         label, confidence = model_prediction
         return {

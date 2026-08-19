@@ -1,0 +1,11 @@
+actual\predicted,maize_common_rust,maize_gray_leaf_spot,maize_leaf_blight,pepper_bacterial_spot,potato_early_blight,potato_late_blight,soybean_healthy,squash_powdery_mildew,tomato_early_blight,tomato_late_blight
+maize_common_rust,44,1,0,0,0,0,0,0,0,0
+maize_gray_leaf_spot,1,39,5,0,0,0,0,0,0,0
+maize_leaf_blight,0,6,39,0,0,0,0,0,0,0
+pepper_bacterial_spot,0,0,0,45,0,0,0,0,0,0
+potato_early_blight,0,0,0,0,45,0,0,0,0,0
+potato_late_blight,0,0,0,0,0,43,1,0,0,1
+soybean_healthy,0,0,0,0,0,1,44,0,0,0
+squash_powdery_mildew,0,0,0,0,0,0,0,45,0,0
+tomato_early_blight,0,0,0,2,0,4,0,0,34,5
+tomato_late_blight,0,0,0,1,0,2,0,0,6,36

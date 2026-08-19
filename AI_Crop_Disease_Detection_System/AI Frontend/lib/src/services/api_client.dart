@@ -13,9 +13,9 @@ class ApiClient {
     HttpClient? httpClient,
     String? baseUrl,
     SessionStore? sessionStore,
-  })  : _httpClient = httpClient ?? HttpClient(),
-        _baseUrl = baseUrl ?? AppConfig.apiBaseUrl,
-        _sessionStore = sessionStore ?? SecureSessionStore();
+  }) : _httpClient = httpClient ?? HttpClient(),
+       _baseUrl = baseUrl ?? AppConfig.apiBaseUrl,
+       _sessionStore = sessionStore ?? SecureSessionStore();
 
   final HttpClient _httpClient;
   final String _baseUrl;
@@ -87,7 +87,10 @@ class ApiClient {
       final diagnoses = json['diagnoses'] as List<dynamic>;
 
       return diagnoses
-          .map((diagnosis) => Diagnosis.fromJson(diagnosis as Map<String, dynamic>))
+          .map(
+            (diagnosis) =>
+                Diagnosis.fromJson(diagnosis as Map<String, dynamic>),
+          )
           .toList();
     });
   }
@@ -96,7 +99,11 @@ class ApiClient {
     required File image,
     int? cropId,
   }) async {
-    final response = await _postMultipart('/diagnoses', image: image, cropId: cropId);
+    final response = await _postMultipart(
+      '/diagnoses',
+      image: image,
+      cropId: cropId,
+    );
 
     return _decode(response, (json) {
       return Diagnosis.fromJson(json['diagnosis'] as Map<String, dynamic>);
@@ -175,7 +182,10 @@ class ApiClient {
     });
   }
 
-  Future<_ApiResponse> _patchJson(String path, Map<String, dynamic> body) async {
+  Future<_ApiResponse> _patchJson(
+    String path,
+    Map<String, dynamic> body,
+  ) async {
     return _guarded(() async {
       final request = await _httpClient.patchUrl(Uri.parse('$_baseUrl$path'));
       request.headers.set(HttpHeaders.acceptHeader, 'application/json');
@@ -193,7 +203,8 @@ class ApiClient {
     int? cropId,
   }) async {
     return _guarded(() async {
-      final boundary = 'crop-diagnosis-${DateTime.now().microsecondsSinceEpoch}';
+      final boundary =
+          'crop-diagnosis-${DateTime.now().microsecondsSinceEpoch}';
       final request = await _httpClient.postUrl(Uri.parse('$_baseUrl$path'));
       request.headers.set(HttpHeaders.acceptHeader, 'application/json');
       request.headers.set(
@@ -260,9 +271,7 @@ class ApiClient {
   _ApiResponse _unreachableResponse() {
     return _ApiResponse(
       0,
-      jsonEncode({
-        'message': 'Unable to reach the server at $_baseUrl.',
-      }),
+      jsonEncode({'message': 'Unable to reach the server at $_baseUrl.'}),
     );
   }
 
@@ -275,11 +284,16 @@ class ApiClient {
     try {
       json = jsonDecode(response.body) as Map<String, dynamic>;
     } on FormatException {
-      return const ApiResult.failure('The server returned an invalid response.');
+      return const ApiResult.failure(
+        'The server returned an invalid response.',
+      );
     }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      return ApiResult.failure(json['message'] as String? ?? 'Request failed.');
+      return ApiResult.failure(
+        json['message'] as String? ?? 'Request failed.',
+        errorCode: json['code'] as String?,
+      );
     }
 
     return ApiResult.success(parser(json));

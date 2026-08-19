@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ApiToken;
 use App\Models\User;
+use App\Support\ZimbabwePhone;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,10 +20,12 @@ class WebAuthController extends Controller
 
     public function register(Request $request): RedirectResponse
     {
+        $request->merge(['phone' => ZimbabwePhone::normalize($request->input('phone'))]);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'phone' => ['nullable', 'string', 'max:30'],
+            'phone' => ZimbabwePhone::rules(),
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'language_preference' => ['required', Rule::in(['en', 'sn'])],
         ]);

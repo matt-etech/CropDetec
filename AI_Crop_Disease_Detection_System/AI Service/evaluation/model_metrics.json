@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-08-19T06:49:20.468040+00:00",
+  "model": "models\\mobilenetv2_crop_disease.keras",
+  "test_data": "data\\processed\\test",
+  "test_images": 450,
+  "accuracy": 0.92,
+  "macro_precision": 0.9194388136018571,
+  "macro_recall": 0.9200000000000002,
+  "macro_f1": 0.9189694207355593,
+  "classes": [
+    {
+      "class": "maize_common_rust",
+      "precision": 0.9777777777777777,
+      "recall": 0.9777777777777777,
+      "f1": 0.9777777777777777,
+      "support": 45
+    },
+    {
+      "class": "maize_gray_leaf_spot",
+      "precision": 0.8478260869565217,
+      "recall": 0.8666666666666667,
+      "f1": 0.8571428571428571,
+      "support": 45
+    },
+    {
+      "class": "maize_leaf_blight",
+      "precision": 0.8863636363636364,
+      "recall": 0.8666666666666667,
+      "f1": 0.8764044943820225,
+      "support": 45
+    },
+    {
+      "class": "pepper_bacterial_spot",
+      "precision": 0.9375,
+      "recall": 1.0,
+      "f1": 0.967741935483871,
+      "support": 45
+    },
+    {
+      "class": "potato_early_blight",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 45
+    },
+    {
+      "class": "potato_late_blight",
+      "precision": 0.86,
+      "recall": 0.9555555555555556,
+      "f1": 0.9052631578947369,
+      "support": 45
+    },
+    {
+      "class": "soybean_healthy",
+      "precision": 0.9777777777777777,
+      "recall": 0.9777777777777777,
+      "f1": 0.9777777777777777,
+      "support": 45
+    },
+    {
+      "class": "squash_powdery_mildew",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 45
+    },
+    {
+      "class": "tomato_early_blight",
+      "precision": 0.85,
+      "recall": 0.7555555555555555,
+      "f1": 0.7999999999999998,
+      "support": 45
+    },
+    {
+      "class": "tomato_late_blight",
+      "precision": 0.8571428571428571,
+      "recall": 0.8,
+      "f1": 0.8275862068965518,
+      "support": 45
+    }
+  ],
+  "acceptance": {
+    "minimum_accuracy": 0.8,
+    "minimum_macro_f1": 0.75,
+    "status": "PASS"
+  }
+}

@@ -59,6 +59,7 @@ class CropController extends Controller
     private function localizedCrop(Crop $crop, string $language): array
     {
         $payload = $crop->toArray();
+        $payload['canonical_name'] = $crop->name;
         $payload['name'] = $this->localizedValue($crop->name, $crop->name_sn, $language);
         $payload['description'] = $this->localizedValue($crop->description, $crop->description_sn, $language);
 

@@ -34,7 +34,9 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
     final result = await widget.apiClient.diagnoses();
 
     if (!result.isSuccess) {
-      throw Exception(result.errorMessage ?? 'Unable to load diagnosis history.');
+      throw Exception(
+        result.errorMessage ?? 'Unable to load diagnosis history.',
+      );
     }
 
     return result.data ?? [];
@@ -47,11 +49,13 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
       final cropName = diagnosis.crop?.name ?? 'Unknown crop';
       final diseaseName = diagnosis.disease?.name ?? diagnosis.predictedLabel;
       final matchesCrop = _cropFilter == 'all' || cropName == _cropFilter;
-      final matchesDisease = _diseaseFilter == 'all' || diseaseName == _diseaseFilter;
+      final matchesDisease =
+          _diseaseFilter == 'all' || diseaseName == _diseaseFilter;
       final matchesDate = switch (_dateFilter) {
-        'today' => diagnosis.createdAt.year == now.year &&
-            diagnosis.createdAt.month == now.month &&
-            diagnosis.createdAt.day == now.day,
+        'today' =>
+          diagnosis.createdAt.year == now.year &&
+              diagnosis.createdAt.month == now.month &&
+              diagnosis.createdAt.day == now.day,
         'week' => now.difference(diagnosis.createdAt).inDays <= 7,
         _ => true,
       };
@@ -63,7 +67,9 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar ? AppBar(title: const Text('Diagnosis history')) : null,
+      appBar: widget.showAppBar
+          ? AppBar(title: const Text('Diagnosis history'))
+          : null,
       body: FutureBuilder<List<Diagnosis>>(
         future: _diagnoses,
         builder: (context, snapshot) {
@@ -91,8 +97,10 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
 
           return ListView.separated(
             padding: const EdgeInsets.all(20),
-            itemCount: filteredDiagnoses.isEmpty ? 2 : filteredDiagnoses.length + 1,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemCount: filteredDiagnoses.isEmpty
+                ? 2
+                : filteredDiagnoses.length + 1,
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               if (index == 0) {
                 return _HistoryFilters(
@@ -101,7 +109,8 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
                   diseaseFilter: _diseaseFilter,
                   dateFilter: _dateFilter,
                   onCropChanged: (value) => setState(() => _cropFilter = value),
-                  onDiseaseChanged: (value) => setState(() => _diseaseFilter = value),
+                  onDiseaseChanged: (value) =>
+                      setState(() => _diseaseFilter = value),
                   onDateChanged: (value) => setState(() => _dateFilter = value),
                 );
               }
@@ -149,13 +158,11 @@ class _HistoryFilters extends StatelessWidget {
   Widget build(BuildContext context) {
     final crops = {
       for (final diagnosis in diagnoses) diagnosis.crop?.name ?? 'Unknown crop',
-    }.toList()
-      ..sort();
+    }.toList()..sort();
     final diseases = {
       for (final diagnosis in diagnoses)
         diagnosis.disease?.name ?? diagnosis.predictedLabel,
-    }.toList()
-      ..sort();
+    }.toList()..sort();
 
     return Card(
       child: Padding(
@@ -177,7 +184,8 @@ class _HistoryFilters extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
-              value: dateFilter,
+              key: ValueKey(dateFilter),
+              initialValue: dateFilter,
               decoration: const InputDecoration(
                 labelText: 'Date',
                 border: OutlineInputBorder(),
@@ -212,14 +220,19 @@ class _FilterDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: value,
+      key: ValueKey('$label:$value'),
+      initialValue: value,
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
       ),
       items: [
-        DropdownMenuItem(value: 'all', child: Text('All ${label.toLowerCase()}s')),
-        for (final value in values) DropdownMenuItem(value: value, child: Text(value)),
+        DropdownMenuItem(
+          value: 'all',
+          child: Text('All ${label.toLowerCase()}s'),
+        ),
+        for (final value in values)
+          DropdownMenuItem(value: value, child: Text(value)),
       ],
       onChanged: (value) => onChanged(value ?? 'all'),
     );
@@ -240,7 +253,8 @@ class _DiagnosisCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final cropName = diagnosis.crop?.name ?? 'Unknown crop';
     final diseaseName = diagnosis.disease?.name ?? diagnosis.predictedLabel;
-    final date = '${diagnosis.createdAt.year}-'
+    final date =
+        '${diagnosis.createdAt.year}-'
         '${diagnosis.createdAt.month.toString().padLeft(2, '0')}-'
         '${diagnosis.createdAt.day.toString().padLeft(2, '0')}';
 
@@ -278,7 +292,7 @@ class _DiagnosisCard extends StatelessWidget {
                       : Image.network(
                           diagnosis.imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
+                          errorBuilder: (_, _, _) => Container(
                             color: colorScheme.primaryContainer,
                             child: Icon(
                               Icons.image_outlined,
@@ -293,9 +307,15 @@ class _DiagnosisCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(diseaseName, style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                      diseaseName,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 6),
-                    Text(cropName, style: TextStyle(color: colorScheme.primary)),
+                    Text(
+                      cropName,
+                      style: TextStyle(color: colorScheme.primary),
+                    ),
                     const SizedBox(height: 8),
                     Text(
                       'Confidence: ${diagnosis.confidence.toStringAsFixed(1)}% - $date',
@@ -322,10 +342,7 @@ class _DiagnosisCard extends StatelessWidget {
 }
 
 class _HistoryState extends StatelessWidget {
-  const _HistoryState({
-    required this.title,
-    required this.message,
-  });
+  const _HistoryState({required this.title, required this.message});
 
   final String title;
   final String message;

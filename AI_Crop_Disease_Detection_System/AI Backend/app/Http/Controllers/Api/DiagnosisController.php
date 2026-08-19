@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\NonLeafImageException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreDiagnosisRequest;
 use App\Models\Diagnosis;
@@ -43,7 +44,16 @@ class DiagnosisController extends Controller
         $data = $request->validated();
 
         $imagePath = $request->file('image')->store('diagnoses', 'public');
-        $prediction = $predictionService->predict($imagePath, $data['crop_id'] ?? null);
+        try {
+            $prediction = $predictionService->predict($imagePath, $data['crop_id'] ?? null);
+        } catch (NonLeafImageException $exception) {
+            Storage::disk('public')->delete($imagePath);
+
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'code' => 'crop_leaf_not_detected',
+            ], 422);
+        }
         $disease = Disease::query()
             ->where('class_label', $prediction->label)
             ->when($data['crop_id'] ?? null, fn ($query, $cropId) => $query->where('crop_id', $cropId))
@@ -127,6 +137,7 @@ class DiagnosisController extends Controller
     private function localizedCrop($crop, string $language): array
     {
         $payload = $crop->toArray();
+        $payload['canonical_name'] = $crop->name;
         $payload['name'] = $this->localizedValue($crop->name, $crop->name_sn, $language);
         $payload['description'] = $this->localizedValue($crop->description, $crop->description_sn, $language);
 

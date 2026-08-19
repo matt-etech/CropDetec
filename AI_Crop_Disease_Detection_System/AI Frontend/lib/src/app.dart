@@ -8,7 +8,9 @@ import 'services/api_client.dart';
 import 'theme/app_theme.dart';
 
 class CropDiseaseApp extends StatefulWidget {
-  const CropDiseaseApp({super.key});
+  const CropDiseaseApp({super.key, this.apiClient});
+
+  final ApiClient? apiClient;
 
   @override
   State<CropDiseaseApp> createState() => _CropDiseaseAppState();
@@ -23,7 +25,7 @@ class _CropDiseaseAppState extends State<CropDiseaseApp> {
   @override
   void initState() {
     super.initState();
-    _apiClient = ApiClient();
+    _apiClient = widget.apiClient ?? ApiClient();
     _restoreSession();
   }
 
@@ -81,28 +83,27 @@ class _CropDiseaseAppState extends State<CropDiseaseApp> {
       home: _isCheckingSession
           ? const SplashGate()
           : _session == null
-              ? LoginScreen(
-                  apiClient: _apiClient,
-                  onAuthenticated: _handleAuthenticated,
-                  isDarkMode: _isDarkMode,
-                  onThemeModeChanged: _handleThemeModeChanged,
-                )
-              : FarmerDashboardScreen(
-                  apiClient: _apiClient,
-                  session: _session!,
-                  onLogout: _handleLogout,
-                  isDarkMode: _isDarkMode,
-                  onThemeModeChanged: _handleThemeModeChanged,
-                ),
+          ? LoginScreen(
+              apiClient: _apiClient,
+              onAuthenticated: _handleAuthenticated,
+              isDarkMode: _isDarkMode,
+              onThemeModeChanged: _handleThemeModeChanged,
+            )
+          : FarmerDashboardScreen(
+              key: ValueKey(_session!.languagePreference),
+              apiClient: _apiClient,
+              session: _session!,
+              onLogout: _handleLogout,
+              onProfileUpdated: _handleAuthenticated,
+              isDarkMode: _isDarkMode,
+              onThemeModeChanged: _handleThemeModeChanged,
+            ),
     );
   }
 }
 
 class _ThemeBackdrop extends StatelessWidget {
-  const _ThemeBackdrop({
-    required this.isDarkMode,
-    required this.child,
-  });
+  const _ThemeBackdrop({required this.isDarkMode, required this.child});
 
   final bool isDarkMode;
   final Widget child;

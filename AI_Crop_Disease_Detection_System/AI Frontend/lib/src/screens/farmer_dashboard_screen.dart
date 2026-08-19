@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/user_session.dart';
+import '../localization/app_strings.dart';
 import '../services/api_client.dart';
 import 'crop_library_screen.dart';
 import 'diagnosis_capture_screen.dart';
@@ -12,6 +13,7 @@ class FarmerDashboardScreen extends StatefulWidget {
     required this.apiClient,
     required this.session,
     required this.onLogout,
+    required this.onProfileUpdated,
     required this.isDarkMode,
     required this.onThemeModeChanged,
     super.key,
@@ -20,6 +22,7 @@ class FarmerDashboardScreen extends StatefulWidget {
   final ApiClient apiClient;
   final UserSession session;
   final Future<void> Function() onLogout;
+  final ValueChanged<UserSession> onProfileUpdated;
   final bool isDarkMode;
   final ValueChanged<bool> onThemeModeChanged;
 
@@ -38,27 +41,21 @@ class _FarmerDashboardScreenState extends State<FarmerDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.forLanguage(widget.session.languagePreference);
     final pages = [
       _HomeTab(
         name: widget.session.name,
         onSelectTab: _selectTab,
+        strings: strings,
       ),
-      DiagnosisCaptureScreen(
-        apiClient: widget.apiClient,
-        showAppBar: false,
-      ),
-      DiagnosisHistoryScreen(
-        apiClient: widget.apiClient,
-        showAppBar: false,
-      ),
-      CropLibraryScreen(
-        apiClient: widget.apiClient,
-        showAppBar: false,
-      ),
+      DiagnosisCaptureScreen(apiClient: widget.apiClient, showAppBar: false),
+      DiagnosisHistoryScreen(apiClient: widget.apiClient, showAppBar: false),
+      CropLibraryScreen(apiClient: widget.apiClient, showAppBar: false),
       ProfileScreen(
         apiClient: widget.apiClient,
         fallbackSession: widget.session,
         onLogout: widget.onLogout,
+        onProfileUpdated: widget.onProfileUpdated,
         showAppBar: false,
       ),
     ];
@@ -66,14 +63,15 @@ class _FarmerDashboardScreenState extends State<FarmerDashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _tabTitle(_selectedIndex),
+          _tabTitle(_selectedIndex, strings),
           style: const TextStyle(fontWeight: FontWeight.w900),
         ),
         actions: [
           IconButton(
-            tooltip: widget.isDarkMode ? 'Use light mode' : 'Use dark mode',
-            onPressed: () =>
-                widget.onThemeModeChanged(!widget.isDarkMode),
+            tooltip: widget.isDarkMode
+                ? strings.useLightMode
+                : strings.useDarkMode,
+            onPressed: () => widget.onThemeModeChanged(!widget.isDarkMode),
             icon: Icon(
               widget.isDarkMode
                   ? Icons.light_mode_outlined
@@ -81,29 +79,26 @@ class _FarmerDashboardScreenState extends State<FarmerDashboardScreen> {
             ),
           ),
           PopupMenuButton<String>(
-            tooltip: 'Account menu',
+            tooltip: strings.accountMenu,
             itemBuilder: (context) => [
+              PopupMenuItem(enabled: false, child: Text(widget.session.name)),
               PopupMenuItem(
-                enabled: false,
-                child: Text(widget.session.name),
-              ),
-              const PopupMenuItem(
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.person_outline),
-                    SizedBox(width: 8),
-                    Text('Profile'),
+                    const Icon(Icons.person_outline),
+                    const SizedBox(width: 8),
+                    Text(strings.profile),
                   ],
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'logout',
                 child: Row(
                   children: [
-                    Icon(Icons.logout),
-                    SizedBox(width: 8),
-                    Text('Log out'),
+                    const Icon(Icons.logout),
+                    const SizedBox(width: 8),
+                    Text(strings.logOut),
                   ],
                 ),
               ),
@@ -121,60 +116,58 @@ class _FarmerDashboardScreenState extends State<FarmerDashboardScreen> {
         ],
       ),
       body: SafeArea(
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: pages,
-        ),
+        child: IndexedStack(index: _selectedIndex, children: pages),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _selectTab,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: strings.home,
           ),
           NavigationDestination(
-            icon: Icon(Icons.photo_camera_outlined),
-            selectedIcon: Icon(Icons.photo_camera),
-            label: 'Diagnose',
+            icon: const Icon(Icons.photo_camera_outlined),
+            selectedIcon: const Icon(Icons.photo_camera),
+            label: strings.diagnose,
           ),
           NavigationDestination(
-            icon: Icon(Icons.history_outlined),
-            selectedIcon: Icon(Icons.history),
-            label: 'History',
+            icon: const Icon(Icons.history_outlined),
+            selectedIcon: const Icon(Icons.history),
+            label: strings.history,
           ),
           NavigationDestination(
-            icon: Icon(Icons.eco_outlined),
-            selectedIcon: Icon(Icons.eco),
-            label: 'Crops',
+            icon: const Icon(Icons.eco_outlined),
+            selectedIcon: const Icon(Icons.eco),
+            label: strings.crops,
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person),
+            label: strings.profile,
           ),
         ],
       ),
     );
   }
 
-  String _tabTitle(int index) {
+  String _tabTitle(int index, AppStrings strings) {
     return switch (index) {
-      1 => 'Start diagnosis',
-      2 => 'Diagnosis history',
-      3 => 'Crop library',
-      4 => 'Profile',
+      1 => strings.startDiagnosis,
+      2 => strings.diagnosisHistory,
+      3 => strings.cropLibrary,
+      4 => strings.profile,
       _ => 'CropDetec',
     };
   }
 }
 
 class _HeroPanel extends StatelessWidget {
-  const _HeroPanel({required this.name});
+  const _HeroPanel({required this.name, required this.strings});
 
   final String name;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +190,7 @@ class _HeroPanel extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
-              'PHASE 1',
+              strings.phaseOne,
               style: TextStyle(
                 color: colorScheme.onPrimary,
                 fontSize: 12,
@@ -207,12 +200,12 @@ class _HeroPanel extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           Text(
-            'Hello, $name.',
+            '${strings.hello}, $name.',
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 14),
           Text(
-            'This first mobile foundation is ready for authentication, API calls, image upload, diagnosis results, history, Shona support, and voice playback.',
+            strings.homeIntroduction,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ],
@@ -225,28 +218,31 @@ class _HomeTab extends StatelessWidget {
   const _HomeTab({
     required this.name,
     required this.onSelectTab,
+    required this.strings,
   });
 
   final String name;
   final ValueChanged<int> onSelectTab;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
       children: [
-        _HeroPanel(name: name),
+        _HeroPanel(name: name, strings: strings),
         const SizedBox(height: 20),
-        _QuickActions(onSelectTab: onSelectTab),
+        _QuickActions(onSelectTab: onSelectTab, strings: strings),
       ],
     );
   }
 }
 
 class _QuickActions extends StatelessWidget {
-  const _QuickActions({required this.onSelectTab});
+  const _QuickActions({required this.onSelectTab, required this.strings});
 
   final ValueChanged<int> onSelectTab;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -256,19 +252,19 @@ class _QuickActions extends StatelessWidget {
         FilledButton.icon(
           onPressed: () => onSelectTab(1),
           icon: const Icon(Icons.photo_camera_outlined),
-          label: const Text('Start diagnosis'),
+          label: Text(strings.startDiagnosis),
         ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () => onSelectTab(2),
           icon: const Icon(Icons.history_outlined),
-          label: const Text('View diagnosis history'),
+          label: Text(strings.viewDiagnosisHistory),
         ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () => onSelectTab(3),
           icon: const Icon(Icons.eco_outlined),
-          label: const Text('Open crop library'),
+          label: Text(strings.openCropLibrary),
         ),
       ],
     );

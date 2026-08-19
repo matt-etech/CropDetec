@@ -11,11 +11,13 @@ class DiagnosisCaptureScreen extends StatefulWidget {
   const DiagnosisCaptureScreen({
     required this.apiClient,
     this.showAppBar = true,
+    this.pickImage,
     super.key,
   });
 
   final ApiClient apiClient;
   final bool showAppBar;
+  final Future<XFile?> Function(ImageSource source)? pickImage;
 
   @override
   State<DiagnosisCaptureScreen> createState() => _DiagnosisCaptureScreenState();
@@ -27,6 +29,7 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
   Crop? _selectedCrop;
   File? _selectedImage;
   String? _message;
+  bool _isLeafDetectionError = false;
   bool _isUploading = false;
 
   @override
@@ -46,12 +49,14 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedImage = await _picker.pickImage(
-      source: source,
-      maxWidth: 1600,
-      maxHeight: 1600,
-      imageQuality: 88,
-    );
+    final pickedImage = widget.pickImage == null
+        ? await _picker.pickImage(
+            source: source,
+            maxWidth: 1600,
+            maxHeight: 1600,
+            imageQuality: 88,
+          )
+        : await widget.pickImage!(source);
 
     if (pickedImage == null) {
       return;
@@ -64,6 +69,7 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
     if (!['jpg', 'jpeg', 'png', 'webp'].contains(extension)) {
       setState(() {
         _message = 'Choose a JPG, PNG, or WEBP image.';
+        _isLeafDetectionError = false;
       });
       return;
     }
@@ -71,6 +77,7 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
     if (size > 5 * 1024 * 1024) {
       setState(() {
         _message = 'Choose an image smaller than 5 MB.';
+        _isLeafDetectionError = false;
       });
       return;
     }
@@ -78,6 +85,7 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
     setState(() {
       _selectedImage = image;
       _message = null;
+      _isLeafDetectionError = false;
     });
   }
 
@@ -87,6 +95,7 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
     if (image == null) {
       setState(() {
         _message = 'Add a clear crop leaf photo first.';
+        _isLeafDetectionError = false;
       });
       return;
     }
@@ -94,6 +103,7 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
     setState(() {
       _isUploading = true;
       _message = null;
+      _isLeafDetectionError = false;
     });
 
     final result = await widget.apiClient.storeDiagnosis(
@@ -112,11 +122,12 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
     if (!result.isSuccess || result.data == null) {
       setState(() {
         _message = result.errorMessage ?? 'Diagnosis failed. Please try again.';
+        _isLeafDetectionError = result.errorCode == 'crop_leaf_not_detected';
       });
       return;
     }
 
-    await Navigator.of(context).pushReplacement(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => DiagnosisResultScreen(
           diagnosis: result.data!,
@@ -130,7 +141,9 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar ? AppBar(title: const Text('Start diagnosis')) : null,
+      appBar: widget.showAppBar
+          ? AppBar(title: const Text('Start diagnosis'))
+          : null,
       body: SafeArea(
         child: FutureBuilder<List<Crop>>(
           future: _crops,
@@ -177,17 +190,14 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
                   )
                 else if (crops.isNotEmpty)
                   DropdownButtonFormField<Crop>(
-                    value: _selectedCrop,
+                    initialValue: _selectedCrop,
                     decoration: const InputDecoration(
                       labelText: 'Crop',
                       border: OutlineInputBorder(),
                     ),
                     items: [
                       for (final crop in crops)
-                        DropdownMenuItem(
-                          value: crop,
-                          child: Text(crop.name),
-                        ),
+                        DropdownMenuItem(value: crop, child: Text(crop.name)),
                     ],
                     onChanged: _isUploading
                         ? null
@@ -200,9 +210,20 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
                 if (_message != null) ...[
                   const SizedBox(height: 14),
                   _InlineMessage(
-                    icon: Icons.info_outline,
+                    icon: Icons.error_outline,
                     message: _message!,
+                    isError: true,
                   ),
+                  if (_isLeafDetectionError) ...[
+                    const SizedBox(height: 10),
+                    OutlinedButton.icon(
+                      onPressed: _isUploading
+                          ? null
+                          : () => _pickImage(ImageSource.camera),
+                      icon: const Icon(Icons.refresh_outlined),
+                      label: const Text('Retake photo'),
+                    ),
+                  ],
                 ],
                 const SizedBox(height: 18),
                 FilledButton.icon(
@@ -213,7 +234,9 @@ class _DiagnosisCaptureScreenState extends State<DiagnosisCaptureScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.search_outlined),
-                  label: Text(_isUploading ? 'Uploading image' : 'Run diagnosis'),
+                  label: Text(
+                    _isUploading ? 'Uploading image' : 'Run diagnosis',
+                  ),
                 ),
                 const SizedBox(height: 14),
                 Text(
@@ -252,7 +275,11 @@ class _ImagePreview extends StatelessWidget {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.eco_outlined, color: colorScheme.primary, size: 48),
+                  Icon(
+                    Icons.eco_outlined,
+                    color: colorScheme.primary,
+                    size: 48,
+                  ),
                   const SizedBox(height: 12),
                   Text(
                     'Add a clear leaf photo',
@@ -273,10 +300,12 @@ class _InlineMessage extends StatelessWidget {
   const _InlineMessage({
     required this.icon,
     required this.message,
+    this.isError = false,
   });
 
   final IconData icon;
   final String message;
+  final bool isError;
 
   @override
   Widget build(BuildContext context) {
@@ -285,16 +314,28 @@ class _InlineMessage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer,
+        color: isError
+            ? colorScheme.errorContainer
+            : colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: colorScheme.outlineVariant),
+        border: Border.all(
+          color: isError ? colorScheme.error : colorScheme.outlineVariant,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: colorScheme.primary),
+          Icon(icon, color: isError ? colorScheme.error : colorScheme.primary),
           const SizedBox(width: 10),
-          Expanded(child: Text(message)),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                color: isError ? colorScheme.onErrorContainer : null,
+                fontWeight: isError ? FontWeight.w700 : null,
+              ),
+            ),
+          ),
         ],
       ),
     );

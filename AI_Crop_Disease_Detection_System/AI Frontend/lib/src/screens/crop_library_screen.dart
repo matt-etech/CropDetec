@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/crop.dart';
+import '../localization/app_strings.dart';
 import '../services/api_client.dart';
 
 class CropLibraryScreen extends StatefulWidget {
@@ -38,8 +39,14 @@ class _CropLibraryScreenState extends State<CropLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.forLanguage(
+      widget.apiClient.currentSession?.languagePreference ?? 'en',
+    );
+
     return Scaffold(
-      appBar: widget.showAppBar ? AppBar(title: const Text('Crop library')) : null,
+      appBar: widget.showAppBar
+          ? AppBar(title: Text(strings.cropLibrary))
+          : null,
       body: FutureBuilder<List<Crop>>(
         future: _crops,
         builder: (context, snapshot) {
@@ -50,7 +57,7 @@ class _CropLibraryScreenState extends State<CropLibraryScreen> {
           if (snapshot.hasError) {
             return _StateMessage(
               icon: Icons.cloud_off_outlined,
-              title: 'Could not load crops',
+              title: strings.couldNotLoadCrops,
               message: snapshot.error.toString(),
             );
           }
@@ -58,10 +65,10 @@ class _CropLibraryScreenState extends State<CropLibraryScreen> {
           final crops = snapshot.data ?? [];
 
           if (crops.isEmpty) {
-            return const _StateMessage(
+            return _StateMessage(
               icon: Icons.eco_outlined,
-              title: 'No crops yet',
-              message: 'Seed crop and disease records from the backend first.',
+              title: strings.noCropsYet,
+              message: strings.noCropsMessage,
             );
           }
 
@@ -78,7 +85,8 @@ class _CropLibraryScreenState extends State<CropLibraryScreen> {
                   mainAxisExtent: 390,
                 ),
                 itemCount: crops.length,
-                itemBuilder: (context, index) => _CropCard(crop: crops[index]),
+                itemBuilder: (context, index) =>
+                    _CropCard(crop: crops[index], strings: strings),
               );
             },
           );
@@ -89,14 +97,15 @@ class _CropLibraryScreenState extends State<CropLibraryScreen> {
 }
 
 class _CropCard extends StatelessWidget {
-  const _CropCard({required this.crop});
+  const _CropCard({required this.crop, required this.strings});
 
   final Crop crop;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final artwork = _CropArtworkData.forCrop(crop.name);
+    final artwork = _CropArtworkData.forCrop(crop.canonicalName, strings);
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -106,6 +115,7 @@ class _CropCard extends StatelessWidget {
           _CropImagePanel(
             cropName: crop.name,
             artwork: artwork,
+            pictureLabel: strings.cropPicture,
           ),
           Expanded(
             child: Padding(
@@ -113,7 +123,10 @@ class _CropCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(crop.name, style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    crop.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   if (crop.scientificName != null) ...[
                     const SizedBox(height: 4),
                     Text(
@@ -148,7 +161,9 @@ class _CropCard extends StatelessWidget {
                           ),
                         if (crop.diseases.length > 3)
                           Chip(
-                            label: Text('+${crop.diseases.length - 3} more'),
+                            label: Text(
+                              '+${crop.diseases.length - 3} ${strings.more}',
+                            ),
                             backgroundColor: colorScheme.surface,
                             side: BorderSide(color: colorScheme.outlineVariant),
                           ),
@@ -169,10 +184,12 @@ class _CropImagePanel extends StatelessWidget {
   const _CropImagePanel({
     required this.cropName,
     required this.artwork,
+    required this.pictureLabel,
   });
 
   final String cropName;
   final _CropArtworkData artwork;
+  final String pictureLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +197,7 @@ class _CropImagePanel extends StatelessWidget {
 
     return Semantics(
       image: true,
-      label: '$cropName crop picture',
+      label: '$cropName $pictureLabel',
       child: SizedBox(
         height: 150,
         width: double.infinity,
@@ -239,88 +256,85 @@ class _CropArtworkData {
   final Color primary;
   final Color secondary;
 
-  static _CropArtworkData forCrop(String name) {
+  static _CropArtworkData forCrop(String name, AppStrings strings) {
     final normalized = name.toLowerCase();
 
     if (normalized.contains('maize') || normalized.contains('corn')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.maize,
-        label: 'Cereal crop',
-        primary: Color(0xFFFACC15),
-        secondary: Color(0xFF15803D),
+        label: strings.cerealCrop,
+        primary: const Color(0xFFFACC15),
+        secondary: const Color(0xFF15803D),
       );
     }
 
     if (normalized.contains('tomato')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.tomato,
-        label: 'Fruit vegetable',
-        primary: Color(0xFFDC2626),
-        secondary: Color(0xFF16A34A),
+        label: strings.fruitVegetable,
+        primary: const Color(0xFFDC2626),
+        secondary: const Color(0xFF16A34A),
       );
     }
 
     if (normalized.contains('potato')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.potato,
-        label: 'Root crop',
-        primary: Color(0xFFD6A15E),
-        secondary: Color(0xFF4D7C0F),
+        label: strings.rootCrop,
+        primary: const Color(0xFFD6A15E),
+        secondary: const Color(0xFF4D7C0F),
       );
     }
 
     if (normalized.contains('pepper')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.pepper,
-        label: 'Vegetable crop',
-        primary: Color(0xFFEF4444),
-        secondary: Color(0xFF15803D),
+        label: strings.vegetableCrop,
+        primary: const Color(0xFFEF4444),
+        secondary: const Color(0xFF15803D),
       );
     }
 
     if (normalized.contains('bean')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.bean,
-        label: 'Legume crop',
-        primary: Color(0xFFA16207),
-        secondary: Color(0xFF16A34A),
+        label: strings.legumeCrop,
+        primary: const Color(0xFFA16207),
+        secondary: const Color(0xFF16A34A),
       );
     }
 
     if (normalized.contains('soy')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.soybean,
-        label: 'Oilseed crop',
-        primary: Color(0xFF84CC16),
-        secondary: Color(0xFF15803D),
+        label: strings.oilseedCrop,
+        primary: const Color(0xFF84CC16),
+        secondary: const Color(0xFF15803D),
       );
     }
 
     if (normalized.contains('squash') ||
         normalized.contains('pumpkin') ||
         normalized.contains('cucumber')) {
-      return const _CropArtworkData(
+      return _CropArtworkData(
         kind: _CropArtworkKind.squash,
-        label: 'Cucurbit crop',
-        primary: Color(0xFFF97316),
-        secondary: Color(0xFF16A34A),
+        label: strings.cucurbitCrop,
+        primary: const Color(0xFFF97316),
+        secondary: const Color(0xFF16A34A),
       );
     }
 
-    return const _CropArtworkData(
+    return _CropArtworkData(
       kind: _CropArtworkKind.leaf,
-      label: 'Supported crop',
-      primary: Color(0xFF22C55E),
-      secondary: Color(0xFF15803D),
+      label: strings.supportedCrop,
+      primary: const Color(0xFF22C55E),
+      secondary: const Color(0xFF15803D),
     );
   }
 }
 
 class _CropArtworkPainter extends CustomPainter {
-  const _CropArtworkPainter({
-    required this.artwork,
-    required this.colorScheme,
-  });
+  const _CropArtworkPainter({required this.artwork, required this.colorScheme});
 
   final _CropArtworkData artwork;
   final ColorScheme colorScheme;
@@ -332,7 +346,10 @@ class _CropArtworkPainter extends CustomPainter {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color.alphaBlend(artwork.secondary.withAlpha(28), colorScheme.surface),
+          Color.alphaBlend(
+            artwork.secondary.withAlpha(28),
+            colorScheme.surface,
+          ),
           Color.alphaBlend(artwork.primary.withAlpha(34), colorScheme.surface),
         ],
       ).createShader(Offset.zero & size);
@@ -421,8 +438,18 @@ class _CropArtworkPainter extends CustomPainter {
 
   void _drawMaize(Canvas canvas, Size size) {
     _drawStem(canvas, size);
-    _drawLeafShape(canvas, Offset(size.width * .36, size.height * .56), const Size(46, 88), -0.8);
-    _drawLeafShape(canvas, Offset(size.width * .65, size.height * .54), const Size(46, 88), 0.8);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .36, size.height * .56),
+      const Size(46, 88),
+      -0.8,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .65, size.height * .54),
+      const Size(46, 88),
+      0.8,
+    );
 
     final cobPaint = Paint()..color = artwork.primary;
     final huskPaint = Paint()..color = artwork.secondary.withAlpha(230);
@@ -455,8 +482,18 @@ class _CropArtworkPainter extends CustomPainter {
 
   void _drawTomato(Canvas canvas, Size size) {
     _drawStem(canvas, size);
-    _drawLeafShape(canvas, Offset(size.width * .40, size.height * .43), const Size(36, 64), -0.9);
-    _drawLeafShape(canvas, Offset(size.width * .60, size.height * .43), const Size(36, 64), 0.9);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .40, size.height * .43),
+      const Size(36, 64),
+      -0.9,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .60, size.height * .43),
+      const Size(36, 64),
+      0.9,
+    );
     final fruitPaint = Paint()..color = artwork.primary;
     for (final center in [
       Offset(size.width * .42, size.height * .64),
@@ -464,7 +501,11 @@ class _CropArtworkPainter extends CustomPainter {
       Offset(size.width * .51, size.height * .76),
     ]) {
       canvas.drawCircle(center, 25, fruitPaint);
-      canvas.drawCircle(center.translate(-8, -8), 6, Paint()..color = Colors.white.withAlpha(52));
+      canvas.drawCircle(
+        center.translate(-8, -8),
+        6,
+        Paint()..color = Colors.white.withAlpha(52),
+      );
     }
   }
 
@@ -472,13 +513,28 @@ class _CropArtworkPainter extends CustomPainter {
     final soilPaint = Paint()..color = colorScheme.onSurface.withAlpha(28);
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(size.width * .18, size.height * .68, size.width * .64, 16),
+        Rect.fromLTWH(
+          size.width * .18,
+          size.height * .68,
+          size.width * .64,
+          16,
+        ),
         const Radius.circular(10),
       ),
       soilPaint,
     );
-    _drawLeafShape(canvas, Offset(size.width * .44, size.height * .42), const Size(38, 64), -0.7);
-    _drawLeafShape(canvas, Offset(size.width * .58, size.height * .40), const Size(38, 64), 0.7);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .44, size.height * .42),
+      const Size(38, 64),
+      -0.7,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .58, size.height * .40),
+      const Size(38, 64),
+      0.7,
+    );
     for (final center in [
       Offset(size.width * .39, size.height * .70),
       Offset(size.width * .53, size.height * .74),
@@ -493,12 +549,36 @@ class _CropArtworkPainter extends CustomPainter {
 
   void _drawPepper(Canvas canvas, Size size) {
     _drawStem(canvas, size);
-    _drawLeafShape(canvas, Offset(size.width * .38, size.height * .42), const Size(38, 68), -0.9);
-    _drawLeafShape(canvas, Offset(size.width * .62, size.height * .42), const Size(38, 68), 0.9);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .38, size.height * .42),
+      const Size(38, 68),
+      -0.9,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .62, size.height * .42),
+      const Size(38, 68),
+      0.9,
+    );
     final pepperPath = Path()
       ..moveTo(size.width * .49, size.height * .48)
-      ..cubicTo(size.width * .72, size.height * .46, size.width * .68, size.height * .84, size.width * .52, size.height * .84)
-      ..cubicTo(size.width * .36, size.height * .82, size.width * .30, size.height * .50, size.width * .49, size.height * .48)
+      ..cubicTo(
+        size.width * .72,
+        size.height * .46,
+        size.width * .68,
+        size.height * .84,
+        size.width * .52,
+        size.height * .84,
+      )
+      ..cubicTo(
+        size.width * .36,
+        size.height * .82,
+        size.width * .30,
+        size.height * .50,
+        size.width * .49,
+        size.height * .48,
+      )
       ..close();
     canvas.drawPath(pepperPath, Paint()..color = artwork.primary);
     canvas.drawCircle(
@@ -510,8 +590,18 @@ class _CropArtworkPainter extends CustomPainter {
 
   void _drawBeans(Canvas canvas, Size size) {
     _drawStem(canvas, size);
-    _drawLeafShape(canvas, Offset(size.width * .36, size.height * .45), const Size(42, 76), -0.8);
-    _drawLeafShape(canvas, Offset(size.width * .64, size.height * .45), const Size(42, 76), 0.8);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .36, size.height * .45),
+      const Size(42, 76),
+      -0.8,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .64, size.height * .45),
+      const Size(42, 76),
+      0.8,
+    );
     final beanPaint = Paint()..color = artwork.primary;
     for (final center in [
       Offset(size.width * .38, size.height * .72),
@@ -526,11 +616,24 @@ class _CropArtworkPainter extends CustomPainter {
   }
 
   void _drawSquash(Canvas canvas, Size size) {
-    _drawLeafShape(canvas, Offset(size.width * .42, size.height * .38), const Size(52, 82), -0.7);
-    _drawLeafShape(canvas, Offset(size.width * .60, size.height * .38), const Size(52, 82), 0.7);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .42, size.height * .38),
+      const Size(52, 82),
+      -0.7,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .60, size.height * .38),
+      const Size(52, 82),
+      0.7,
+    );
     final squashPaint = Paint()..color = artwork.primary;
     final center = Offset(size.width * .52, size.height * .69);
-    canvas.drawOval(Rect.fromCenter(center: center, width: 96, height: 66), squashPaint);
+    canvas.drawOval(
+      Rect.fromCenter(center: center, width: 96, height: 66),
+      squashPaint,
+    );
     canvas.drawOval(
       Rect.fromCenter(center: center.translate(-20, 0), width: 32, height: 66),
       Paint()..color = artwork.primary.withAlpha(185),
@@ -543,13 +646,24 @@ class _CropArtworkPainter extends CustomPainter {
 
   void _drawLeaf(Canvas canvas, Size size) {
     _drawStem(canvas, size);
-    _drawLeafShape(canvas, Offset(size.width * .40, size.height * .50), const Size(58, 96), -0.7);
-    _drawLeafShape(canvas, Offset(size.width * .60, size.height * .50), const Size(58, 96), 0.7);
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .40, size.height * .50),
+      const Size(58, 96),
+      -0.7,
+    );
+    _drawLeafShape(
+      canvas,
+      Offset(size.width * .60, size.height * .50),
+      const Size(58, 96),
+      0.7,
+    );
   }
 
   @override
   bool shouldRepaint(covariant _CropArtworkPainter oldDelegate) {
-    return oldDelegate.artwork != artwork || oldDelegate.colorScheme != colorScheme;
+    return oldDelegate.artwork != artwork ||
+        oldDelegate.colorScheme != colorScheme;
   }
 }
 

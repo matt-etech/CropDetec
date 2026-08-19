@@ -40,7 +40,7 @@ class _DiagnosisResultScreenState extends State<DiagnosisResultScreen> {
       _isSpeaking = true;
     });
 
-    await _textToSpeech.speak(
+    final speechResult = await _textToSpeech.speak(
       text: text,
       languageCode: widget.languagePreference,
     );
@@ -49,9 +49,38 @@ class _DiagnosisResultScreenState extends State<DiagnosisResultScreen> {
       return;
     }
 
+    if (!speechResult.success || speechResult.fallbackUsed) {
+      final message = speechResult.fallbackUsed
+          ? strings.shonaSpeechFallback
+          : speechResult.message.isEmpty
+          ? strings.speechFailed
+          : speechResult.message;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    }
+
+    if (!speechResult.success) {
+      setState(() {
+        _isSpeaking = false;
+      });
+    }
+  }
+
+  Future<void> _stopSpeaking() async {
+    await _textToSpeech.stop();
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _isSpeaking = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _textToSpeech.stop();
+    super.dispose();
   }
 
   @override
@@ -63,7 +92,10 @@ class _DiagnosisResultScreenState extends State<DiagnosisResultScreen> {
     final diseaseName = diagnosis.disease?.name ?? diagnosis.predictedLabel;
 
     return Scaffold(
-      appBar: AppBar(title: Text(strings.diagnosisResult)),
+      appBar: AppBar(
+        leading: const BackButton(),
+        title: Text(strings.diagnosisResult),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
@@ -97,9 +129,15 @@ class _DiagnosisResultScreenState extends State<DiagnosisResultScreen> {
             ),
             const SizedBox(height: 14),
             OutlinedButton.icon(
-              onPressed: _isSpeaking ? null : _speakResult,
-              icon: Icon(_isSpeaking ? Icons.volume_up : Icons.record_voice_over_outlined),
-              label: Text(_isSpeaking ? 'Reading result' : strings.speakResult),
+              onPressed: _isSpeaking ? _stopSpeaking : _speakResult,
+              icon: Icon(
+                _isSpeaking
+                    ? Icons.stop_circle_outlined
+                    : Icons.record_voice_over_outlined,
+              ),
+              label: Text(
+                _isSpeaking ? strings.stopVoice : strings.speakResult,
+              ),
             ),
             const SizedBox(height: 14),
             if (diagnosis.confidence < 60)

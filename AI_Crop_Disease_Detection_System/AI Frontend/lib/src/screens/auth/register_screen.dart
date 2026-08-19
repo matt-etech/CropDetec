@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/user_session.dart';
 import '../../services/api_client.dart';
+import '../../utils/zimbabwe_phone.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
@@ -54,9 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final result = await widget.apiClient.register(
       name: _nameController.text.trim(),
       email: _emailController.text.trim(),
-      phone: _phoneController.text.trim().isEmpty
-          ? null
-          : _phoneController.text.trim(),
+      phone: normalizeZimbabwePhone(_phoneController.text),
       password: _passwordController.text,
       languagePreference: _languagePreference,
     );
@@ -135,8 +134,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.phone,
                     decoration: const InputDecoration(
                       labelText: 'Phone number',
+                      hintText: '0771234567',
                       prefixIcon: Icon(Icons.phone_outlined),
                     ),
+                    validator: validateZimbabwePhone,
                   ),
                   const SizedBox(height: 14),
                   DropdownButtonFormField<String>(
@@ -163,7 +164,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       labelText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
-                        tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                        tooltip: _obscurePassword
+                            ? 'Show password'
+                            : 'Hide password',
                         onPressed: () {
                           setState(() {
                             _obscurePassword = !_obscurePassword;
@@ -192,7 +195,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.person_add_alt_1_outlined),
-                    label: Text(_isLoading ? 'Creating account' : 'Create account'),
+                    label: Text(
+                      _isLoading ? 'Creating account' : 'Create account',
+                    ),
                   ),
                 ],
               ),

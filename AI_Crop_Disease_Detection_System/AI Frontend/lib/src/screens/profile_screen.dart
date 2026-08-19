@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../models/user_session.dart';
+import '../localization/app_strings.dart';
 import '../services/api_client.dart';
+import '../utils/zimbabwe_phone.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     required this.apiClient,
     required this.fallbackSession,
     required this.onLogout,
+    required this.onProfileUpdated,
     this.showAppBar = true,
     super.key,
   });
@@ -15,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
   final ApiClient apiClient;
   final UserSession fallbackSession;
   final Future<void> Function() onLogout;
+  final ValueChanged<UserSession> onProfileUpdated;
   final bool showAppBar;
 
   @override
@@ -66,9 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final result = await widget.apiClient.updateProfile(
       name: _nameController.text.trim(),
-      phone: _phoneController.text.trim().isEmpty
-          ? null
-          : _phoneController.text.trim(),
+      phone: normalizeZimbabwePhone(_phoneController.text),
       languagePreference: _languagePreference,
     );
 
@@ -85,14 +87,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _profile = Future.value(result.data);
       }
     });
+
+    if (result.data != null) {
+      widget.onProfileUpdated(result.data!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final strings = AppStrings.forLanguage(_languagePreference);
 
     return Scaffold(
-      appBar: widget.showAppBar ? AppBar(title: const Text('Profile')) : null,
+      appBar: widget.showAppBar ? AppBar(title: Text(strings.profile)) : null,
       body: FutureBuilder<UserSession>(
         future: _profile,
         builder: (context, snapshot) {
@@ -113,10 +120,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(profile.email, style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        profile.email,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                       const SizedBox(height: 8),
                       Text(
-                        'Update your farmer profile and preferred language.',
+                        strings.profileHint,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -125,32 +135,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Full name',
-                    prefixIcon: Icon(Icons.person_outline),
+                  decoration: InputDecoration(
+                    labelText: strings.fullName,
+                    prefixIcon: const Icon(Icons.person_outline),
                   ),
-                  validator: (value) =>
-                      (value?.trim().isEmpty ?? true) ? 'Enter your name.' : null,
+                  validator: (value) => (value?.trim().isEmpty ?? true)
+                      ? strings.enterName
+                      : null,
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone number',
-                    prefixIcon: Icon(Icons.phone_outlined),
+                  decoration: InputDecoration(
+                    labelText: strings.phoneNumber,
+                    hintText: '0771234567',
+                    prefixIcon: const Icon(Icons.phone_outlined),
                   ),
+                  validator: validateZimbabwePhone,
                 ),
                 const SizedBox(height: 14),
                 DropdownButtonFormField<String>(
-                  value: _languagePreference,
-                  decoration: const InputDecoration(
-                    labelText: 'Preferred language',
-                    prefixIcon: Icon(Icons.language_outlined),
+                  initialValue: _languagePreference,
+                  decoration: InputDecoration(
+                    labelText: strings.preferredLanguage,
+                    prefixIcon: const Icon(Icons.language_outlined),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'en', child: Text('English')),
-                    DropdownMenuItem(value: 'sn', child: Text('Shona')),
+                  items: [
+                    DropdownMenuItem(value: 'en', child: Text(strings.english)),
+                    DropdownMenuItem(value: 'sn', child: Text(strings.shona)),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -180,13 +193,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.save_outlined),
-                  label: Text(_isSaving ? 'Saving profile' : 'Save profile'),
+                  label: Text(
+                    _isSaving ? strings.savingProfile : strings.saveProfile,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton.icon(
                   onPressed: widget.onLogout,
                   icon: const Icon(Icons.logout),
-                  label: const Text('Log out'),
+                  label: Text(strings.logOut),
                 ),
               ],
             ),
