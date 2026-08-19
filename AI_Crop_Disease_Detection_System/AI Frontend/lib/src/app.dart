@@ -28,8 +28,14 @@ class _CropDiseaseAppState extends State<CropDiseaseApp> {
   }
 
   Future<void> _restoreSession() async {
+    final session = await _apiClient.restoreSession();
+
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
-      _session = _apiClient.currentSession;
+      _session = session;
       _isCheckingSession = false;
     });
   }

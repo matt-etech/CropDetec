@@ -15,13 +15,15 @@ class ApiClient {
     SessionStore? sessionStore,
   })  : _httpClient = httpClient ?? HttpClient(),
         _baseUrl = baseUrl ?? AppConfig.apiBaseUrl,
-        _sessionStore = sessionStore ?? InMemorySessionStore();
+        _sessionStore = sessionStore ?? SecureSessionStore();
 
   final HttpClient _httpClient;
   final String _baseUrl;
   final SessionStore _sessionStore;
 
   UserSession? get currentSession => _sessionStore.currentSession;
+
+  Future<UserSession?> restoreSession() => _sessionStore.restore();
 
   Future<ApiResult<UserSession>> login({
     required String email,
